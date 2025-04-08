@@ -6,24 +6,13 @@ import {TextField} from '@mui/material';
 import {Close, DangerousSharp, VisibilityOffOutlined, VisibilityOutlined} from '@mui/icons-material';
 import './LoginScreen.css';
 import FormSubmit from '../forms/FormSubmit';
-import {auth} from '../firebase';
-import {login} from '../features/UserSlice';
-import { useDispatch } from 'react-redux';
 
 function LoginScreen() {
   const { handleSubmit, register, formState: { errors } } = useForm();
   const [passwordShown, setPasswordShown] = useState(false);
-  const dispatch = useDispatch();
 
-  // Firebase Auth
   const onSubmit = ({email, password}) => {
-    auth.SignInWithEmailAndPassword(email, password).then((userAuth) => {
-      dispatch(login({
-        email: userAuth.user.email,
-        uid: userAuth.user.uid,
-        displayName: userAuth.user.displayName
-      }))
-    }).catch((error) => alert(error.message));
+
   }
   return (
     <div>

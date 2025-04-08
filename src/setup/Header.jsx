@@ -39,10 +39,10 @@ function Header() {
 
           <ul className="navbar-nav-right">
             <li>
-              <Link to="/account/signin" className="btn ">Sign in</Link>
+              <Link to="/account/signin" className="btn ">Đăng ký</Link>
             </li>
             <li>
-              <Link to="/account/create" className="btn btn-dark">Sign up</Link>
+              <Link to="/account/create" className="btn btn-dark">Đăng nhập</Link>
             </li>
           </ul>
 
