@@ -1,0 +1,347 @@
+:root {
+  --starbucks-green: #1e3932;
+  --starbucks-light-green: #00754a;
+  --bg-kem: #f1f8f4;
+  --bg-pink: #fef6f4;
+  --bg-income: #f3f1e7;
+  --bg-reduced: #e0f4f3;
+  --font-main: 'Helvetica Neue', 'Segoe UI', sans-serif;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tooltipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: #f5f5f5;
+  color: var(--starbucks-green);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Section wrapper chung */
+.section_infotax,
+.section_infouser,
+.section_income,
+.section_income_reduced {
+  background-color: var(--bg-kem);
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-main);
+  width: 100%;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease;
+}
+
+.section_infouser {
+  background-color: var(--bg-pink);
+}
+
+.section_income {
+  background-color: var(--bg-income);
+}
+
+.section_income_reduced {
+  background-color: var(--bg-reduced);
+}
+
+.heading {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--starbucks-green);
+  animation: fadeIn 1s ease;
+}
+
+
+/* Rows */
+.input-row,
+.form-group,
+.business-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding-left: 1rem;
+  border-left: 3px solid #d0e8e2;
+  width: 100%;
+}
+
+/* Label */
+.label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--starbucks-green);
+  white-space: normal;
+  margin-bottom: 0.3rem;
+}
+
+/* Input */
+.input-box {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.6rem 1rem;
+  margin-left: 1.5rem;
+  border-radius: 16px;
+  border: 2px solid var(--starbucks-green);
+  font-size: 1rem;
+  color: var(--starbucks-green);
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.input-box:focus {
+  border-color: var(--starbucks-light-green);
+  box-shadow: 0 0 0 3px rgba(0, 117, 74, 0.15);
+  outline: none;
+  transform: scale(1.02);
+}
+
+.input-wrapper {
+  width: 100%;
+}
+
+/* Radio/Checkbox */
+.radio-group,
+.checkbox-wrapper,
+.residency_options {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.radio-label,
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--starbucks-green);
+  cursor: pointer;
+}
+
+.radio-label input[type="radio"],
+.checkbox-label input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--starbucks-light-green);
+}
+
+/* Tooltip */
+.tooltip-custom {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: var(--starbucks-light-green);
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.tooltip-custom .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: max-content;
+  max-width: 220px;
+  background-color: #e8f0ed;
+  color: var(--starbucks-green);
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.tooltip-custom .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #e8f0ed transparent transparent transparent;
+}
+
+.tooltip-custom:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  animation: tooltipSlideIn 0.3s ease;
+}
+
+/* Form Container */
+.form {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 10rem;
+}
+
+
+/* Responsive fix */
+@media (max-width: 768px) {
+  .input-row,
+  .form-group,
+  .business-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .label {
+    min-width: unset;
+  }
+
+  .input-box {
+    max-width: 100%;
+  }
+}
+
+/* Result Section */
+.result-section {
+  margin-top: 3rem;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeInUp 1s ease;
+}
+
+/* Button */
+.calculate-btn {
+  background-color: #00704a;
+  color: white;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.calculate-btn:hover {
+  background-color: #00593b;
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* Result Box */
+.result {
+  background-color: #f7f7f7;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-left: 8px solid #00704a;
+  animation: fadeInUp 0.8s ease;
+}
+
+.result-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 600px) {
+  .result-grid {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+.result-box {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  flex: 1;
+  transition: transform 0.2s ease;
+  animation: fadeIn 1s ease;
+}
+
+.result-box:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(0, 112, 74, 0.15);
+}
+
+.result-label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+.result-value {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #00704a;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade in on scroll (activated via JS) */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.fade-in-up.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* General smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+.label-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
