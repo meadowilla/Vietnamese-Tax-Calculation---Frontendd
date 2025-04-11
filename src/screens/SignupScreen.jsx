@@ -4,11 +4,6 @@ import SignupForm from '../forms/SignupForm';
 import './SignupScreen.css';
 
 function SignupScreen() {
-  // const onSubmit = ({firstName, lastName, email, password}) => {
-  //   auth.createUserWithEmailAndPassword(email, password).then((userAuth) => {
-      
-  //   }
-  // }
   return (
     <div className="signupScreen">
       <div className="signupScreen__info">
