@@ -10,9 +10,35 @@ function SignupForm() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [passwordShown, setPasswordShown] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const onSubmit = async ({firstName, lastName, email, password}) => {
+    try {
+      const username = firstName + lastName;
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+      };
+
+      await fetch('http://localhost:3000/auth/signup/', req)
+        .then(response => response.json())
+        .then(res => {
+          if (res.status === 200) {
+            console.log('User created successfully:', res);
+          } else {
+            throw new Error(res.json);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        }
+      );
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   return (
     <div>
@@ -23,7 +49,6 @@ function SignupForm() {
               <div className="signupForm__inputContainer">
                 <TextField 
                   label="First name" 
-                  name="fName" 
                   type="text" 
                   slotProps={{
                     style: { color: "rgba(0,0,0,.56)" },
@@ -31,7 +56,7 @@ function SignupForm() {
                   }}
                   className='signupForm__input' 
                   // error={!!errors.fName}
-                  {...register("First name", { required: true })}
+                  {...register("firstName", { required: true })}
                 />
                 {errors.fName && 
                   <div className="signupForm__error">
@@ -48,7 +73,6 @@ function SignupForm() {
               <div className="signupForm__inputContainer">
                 <TextField 
                   label="Last name" 
-                  name="lName" 
                   type="text" 
                   slotProps={{
                     style: { color: "rgba(0,0,0,.56)" },
@@ -56,7 +80,7 @@ function SignupForm() {
                   }}
                   className='signupForm__input' 
                   // error={!!errors.lName}
-                  {...register("email", { required: true })}
+                  {...register("lastName", { required: true })}
                 />
                 {errors.lName && 
                   <div className="signupForm__error">
@@ -75,7 +99,6 @@ function SignupForm() {
               <div className="signupForm__inputContainer">
                 <TextField 
                   label="Email Address" 
-                  name="email" 
                   type="email" 
                   slotProps={{
                     style: { color: "rgba(0,0,0,.56)" },
@@ -83,7 +106,7 @@ function SignupForm() {
                   }}
                   className='signupForm__input' 
                   // error={!!errors.email}
-                  {...register("Last name", { required: true })}
+                  {...register("email", { required: true })}
                 />
                 {errors.email && 
                   <div className="signupForm__error">
@@ -100,14 +123,13 @@ function SignupForm() {
               <div className='signupForm__inputContainer'>
                 <TextField 
                   label="Password" 
-                  name="password" 
                   type={passwordShown ? "text" : "password"}
                   slotProps={{
                     style: { color: "rgba(0,0,0,.30)" },
                     htmlInput: { style: { fontWeight: "400" } }
                   }}
                   className='signupForm__passwordInput'
-                  {...register("Password", { required: true })}
+                  {...register("password", { required: true })}
                 />
                 {passwordShown ? (
                   <VisibilityOutlined
