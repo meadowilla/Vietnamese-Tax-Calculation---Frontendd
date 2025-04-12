@@ -12,7 +12,48 @@ function LoginScreen() {
   const [passwordShown, setPasswordShown] = useState(false);
 
   const onSubmit = ({email, password}) => {
+    try {
+      if (!email || !password) {
+        throw new Error('Email and password are required');
+      }
+      // Validate email format
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        throw new Error('Invalid email format');
+      }
+      // Validate password length
+      if (password.length < 8 || password.length > 25) {
+        throw new Error('Password must be between 8 and 25 characters');
+      }
+      // Validate password complexity
+      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/;
+      if (!passwordPattern.test(password)) {
+        throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+      }
+      
+      const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      };
 
+      fetch('http://localhost:3000/auth/login/', req)
+        .then(response => response.json())
+        .then(res => {
+          if (res.status === 200) {
+            console.log('User logged in successfully:', res);
+          } else {
+            throw new Error("Invalid email or password");
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
   return (
     <div>

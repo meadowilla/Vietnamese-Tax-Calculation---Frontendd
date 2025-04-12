@@ -12,6 +12,29 @@ function SignupForm() {
 
   const onSubmit = async ({firstName, lastName, email, password}) => {
     try {
+      if (!firstName || !lastName || !email || !password) {
+        throw new Error('All fields are required');
+      }
+      // Validate email format
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        throw new Error('Invalid email format');
+      }
+      // Validate password length
+      if (password.length < 8 || password.length > 25) {
+        throw new Error('Password must be between 8 and 25 characters');
+      }
+      // Validate password complexity
+      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/;
+      if (!passwordPattern.test(password)) {
+        throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+      }
+      // Validate first name and last name
+      const namePattern = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐÊÔƠƯĐàáâãèéêìíòóôõùúăđêôơưđ]+$/;
+      if (!namePattern.test(firstName) || !namePattern.test(lastName)) {
+        throw new Error('First name and last name can only contain letters');
+      }
+
       const username = firstName + lastName;
       const req = {
         method: 'POST',
@@ -27,7 +50,7 @@ function SignupForm() {
           if (res.status === 200) {
             console.log('User created successfully:', res);
           } else {
-            throw new Error(res.json);
+            throw new Error("User already exists");
           }
         })
         .catch((error) => {
