@@ -18,83 +18,84 @@ function LoginScreen() {
     <div>
       <div className="loginScreen">
         <div className="loginScreen__info">
-          <h1>Sign in or create an account</h1>
+          <h1>Đăng nhập tài khoản của bạn</h1>
         </div>
         <div className="loginScreen__main">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='loginScreen__inputContainer'>
-              <TextField 
-                label="Username or email address" 
-                name="email" 
-                type="email" 
-                slotProps={{
-                  style: { color: "rgba(0,0,0,.30)" },
-                  htmlInput: { style: { fontWeight: "800" } }
-                }}
-                className='loginScreen__emailInput'
-                {...register("Username or email", { required: true })}
-              />
-              {errors.email && 
-                <div className="loginScreen__error">
-                  <Close fontSize="small" />
-                  <span>Enter an email/username</span>
-                  <DangerousSharp
-                    fontSize="small"
-                    className="loginScreen__reportIcon"
-                  />
-                </div>
-              }
-            </div>
-
-            <div className='loginScreen__inputContainer'>
-              <TextField 
-                label="Password" 
-                name="password" 
-                type={passwordShown ? "text" : "password"}
-                slotProps={{
-                  style: { color: "rgba(0,0,0,.30)" },
-                  htmlInput: { style: { fontWeight: "800" } }
-                }}
-                className='loginScreen__passwordInput'
-                {...register("Password", { required: true })}
-              />
-              {passwordShown ? (
-                <VisibilityOutlined
-                  onClick={() => setPasswordShown((passwordShown)=> !passwordShown)}
-                  className='loginScreen__visibilityIcon'
+          <div className="loginScreen__form">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className='loginScreen__inputContainer'>
+                <TextField 
+                  label="Địa chỉ email" 
+                  name="email" 
+                  type="email" 
+                  slotProps={{
+                    style: { color: "rgba(0,0,0,.30)" },
+                    htmlInput: { style: { fontWeight: "800" } }
+                  }}
+                  className='loginScreen__emailInput'
+                  {...register("email", { required: true })}
                 />
-              ) : (
-                <VisibilityOffOutlined
-                  onClick={() => setPasswordShown((passwordShown)=> !passwordShown)}
-                  className='loginScreen__visibilityIcon'
+                {errors.email && 
+                  <div className="loginScreen__error">
+                    <Close fontSize="small" />
+                    <span>Hãy nhập email</span>
+                    <DangerousSharp
+                      fontSize="small"
+                      className="loginScreen__reportIcon"
+                    />
+                  </div>
+                }
+              </div>
+
+              <div className='loginScreen__inputContainer'>
+                <TextField 
+                  label="Mật khẩu" 
+                  name="password" 
+                  type={passwordShown ? "text" : "password"}
+                  slotProps={{
+                    style: { color: "rgba(0,0,0,.30)" },
+                    htmlInput: { style: { fontWeight: "800" } }
+                  }}
+                  className='loginScreen__passwordInput'
+                  {...register("password", { required: true })}
                 />
-              )}
-
-              {errors.password && 
-                <div className="loginScreen__error">
-                  <Icon fontSize="small" />
-                  <span>Enter a password</span>
-                  <DangerousSharp
-                    fontSize="small"
-                    className="loginScreen__reportIcon"
+                {passwordShown ? (
+                  <VisibilityOutlined
+                    onClick={() => setPasswordShown((passwordShown)=> !passwordShown)}
+                    className='loginScreen__visibilityIcon'
                   />
-                </div>
-              }
-            </div>
+                ) : (
+                  <VisibilityOffOutlined
+                    onClick={() => setPasswordShown((passwordShown)=> !passwordShown)}
+                    className='loginScreen__visibilityIcon'
+                  />
+                )}
 
-            <div className='loginScreen__resetLink'>
-              <Link >Forgot your username?</Link>
-              <Link >Forgot your password?</Link>
-            </div>
+                {errors.password && 
+                  <div className="loginScreen__error">
+                    <Icon fontSize="small" />
+                    <span>Hãy nhập mật khẩu</span>
+                    <DangerousSharp
+                      fontSize="small"
+                      className="loginScreen__reportIcon"
+                    />
+                  </div>
+                }
+              </div>
 
-            <FormSubmit name="Sign in" type="submit" variant='contained'>Sign in</FormSubmit>
-          </form>
+              <div className='loginScreen__resetLink'>
+                <Link >Quên mật khẩu?</Link>
+              </div>
+
+              <FormSubmit name="Đăng nhập" type="submit" variant='contained'></FormSubmit>
+            </form>
+          </div>
           <div className='loginScreen__rewards'>
-              <h4>JOIN STARBUCK® REWARDS</h4>
-              <p>As a member, start earning free food and drinks, unlock our best offers and celebrate your birthday with a treat from us. Best of all, it's free to join.</p>
+              <h4>ĐĂNG KÝ VIETNAMESE TAX CALCULATOR</h4>
+              <p>Là người dùng đăng ký tài khoản, bạn có thể sử dụng các tính năng cá nhân hóa như xem lịch sử thuế, dự đoán/tính thuế theo năm, lưu/xuất báo cáo thuế.</p>
           </div>
           <div className='loginScreen__joinNow'>
-            <Link to="/account/create">Join now</Link>
+            <Link to="/account/create">Đăng ký tài khoản</Link>
           </div>
         </div>
       </div>

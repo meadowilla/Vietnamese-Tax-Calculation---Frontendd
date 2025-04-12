@@ -45,10 +45,10 @@ function SignupForm() {
       <div className='signupForm'>
         <div className="signupForm__container">
             <form onSubmit={handleSubmit(onSubmit)} className='signupForm__form'>
-              <h4 className='signupForm__section'>Personal Information</h4>
+              <h4 className='signupForm__section'>Thông tin cá nhân</h4>
               <div className="signupForm__inputContainer">
                 <TextField 
-                  label="First name" 
+                  label="Họ" 
                   type="text" 
                   slotProps={{
                     style: { color: "rgba(0,0,0,.56)" },
@@ -61,7 +61,7 @@ function SignupForm() {
                 {errors.fName && 
                   <div className="signupForm__error">
                     <Close fontSize="small" />
-                    <span>Enter your first name.</span>
+                    <span>Hãy nhập họ</span>
                     <DangerousSharp
                       fontSize="small"
                       className="signupForm__reportIcon"
@@ -72,7 +72,7 @@ function SignupForm() {
 
               <div className="signupForm__inputContainer">
                 <TextField 
-                  label="Last name" 
+                  label="Tên" 
                   type="text" 
                   slotProps={{
                     style: { color: "rgba(0,0,0,.56)" },
@@ -85,7 +85,7 @@ function SignupForm() {
                 {errors.lName && 
                   <div className="signupForm__error">
                     <Close fontSize="small" />
-                    <span>Enter your last name.</span>
+                    <span>Hãy nhập tên</span>
                     <DangerousSharp
                       fontSize="small"
                       className="signupForm__reportIcon"
@@ -93,12 +93,12 @@ function SignupForm() {
                   </div>
                 }
               </div>
-
-              <h4 className='signupForm__section'>Account Security</h4>
+              <h5>Họ và tên sẽ được dùng làm tên tài khoản của bạn.</h5>
+              <h4 className='signupForm__section'>Bảo mật tài khoản</h4>
 
               <div className="signupForm__inputContainer">
                 <TextField 
-                  label="Email Address" 
+                  label="Địa chỉ email" 
                   type="email" 
                   slotProps={{
                     style: { color: "rgba(0,0,0,.56)" },
@@ -111,7 +111,7 @@ function SignupForm() {
                 {errors.email && 
                   <div className="signupForm__error">
                     <Close fontSize="small" />
-                    <span>Enter an email.</span>
+                    <span>Hãy nhập email</span>
                     <DangerousSharp
                       fontSize="small"
                       className="signupForm__reportIcon"
@@ -122,7 +122,7 @@ function SignupForm() {
 
               <div className='signupForm__inputContainer'>
                 <TextField 
-                  label="Password" 
+                  label="Mật khẩu" 
                   type={passwordShown ? "text" : "password"}
                   slotProps={{
                     style: { color: "rgba(0,0,0,.30)" },
@@ -146,16 +146,16 @@ function SignupForm() {
                 {errors.password && 
                   <div className="signupForm__error">
                     <Icon fontSize="small" />
-                    <span>Enter a password</span>
+                    <span>Hãy nhập mật khẩu</span>
                     <DangerousSharp
                       fontSize="small"
                       className="signupForm__reportIcon"
                     />
                   </div>
                 }
-                <h5>Create a password 8 to 25 characters long that includes at least 1 uppercase and 1 lowercase letter, 1 number and 1 special character like an exclamation point or asterisk.</h5>
+                <h5>Tạo mật khẩu dài 8 đến 25 ký tự, bao gồm ít nhất 1 chữ cái in hoa, 1 chữ cái in thường, 1 chữ số và 1 ký tự đặc biệt như .,?!</h5>
               </div>
-              <FormSubmit name='Create account' type='submit'>Sign up</FormSubmit>
+              <FormSubmit name='Tạo tài khoản' type='submit'></FormSubmit>
             </form>
         </div>
       </div>

@@ -20,7 +20,7 @@ function Footer () {
                     </a>
                 </div>
 
-                <p className="copyright">© {new Date().getFullYear()} Vietnamese Tax Calcualtor. All rights reserved.</p>
+                <p className="copyright">© {new Date().getFullYear()} Vietnamese Tax Calculator. All rights reserved.</p>
 
             </div>
         </footer>

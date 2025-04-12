@@ -7,7 +7,7 @@ function SignupScreen() {
   return (
     <div className="signupScreen">
       <div className="signupScreen__info">
-        <h1>Create an account</h1>
+        <h1>Đăng ký tài khoản của bạn</h1>
       </div>
       <div className="signupScreen__main">  
         <SignupForm />
