@@ -155,13 +155,6 @@ function SignupForm() {
                 }
                 <h5>Create a password 8 to 25 characters long that includes at least 1 uppercase and 1 lowercase letter, 1 number and 1 special character like an exclamation point or asterisk.</h5>
               </div>
-              
-              <h4 className='signupForm__rewards'> 
-                Collect more Stars & Earn Rewards
-              </h4>
-              <span className='signupForm__span'>
-                Email is a great way to know about offers and what's new from Starbucks.
-              </span>
               <FormSubmit name='Create account' type='submit'>Sign up</FormSubmit>
             </form>
         </div>
