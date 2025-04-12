@@ -1,0 +1,37 @@
+.label-contact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.background {
+  background-color: #d3fbeb;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-main);
+  width: 100%;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease;
+}
+
+/*Button layout*/
+.button-layout {
+  background-color: #00754a;     
+  color: white;                  
+  padding: 10px 20px;            
+  border: none;                  
+  border-radius: 8px;            
+  font-size: 16px;               
+  cursor: pointer;               
+  transition: background-color 0.3s;
+}
+.button-container{
+  display: flex;
+  justify-self: flex-end;
+  border: 10rem;
+  margin: 1rem;
+}
+.button:hover {
+  background-color: #333;    
+}

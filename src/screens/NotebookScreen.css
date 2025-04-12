@@ -1,0 +1,54 @@
+:root {
+    --starbucks-green: #1e3932;
+    --starbucks-light-green: #00754a;
+    --bg-kem: #f1f8f4;
+    --bg-pink: #fef6f4;
+    --bg-income: #f3f1e7;
+    --bg-reduced: #e0f4f3;
+    --font-main: 'Helvetica Neue', 'Segoe UI', sans-serif;
+}
+.notebook-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: sans-serif;
+  }
+
+.heading {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.article {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.article:hover {
+    transform: translateY(-4px);
+}
+
+.article-title {
+    font-family: var(--font-main);
+    font-weight: bold;
+    font-size: 50px;
+    color: #00754a;
+    margin-bottom: 0.5rem;
+}
+
+.article-content {
+    font-size: 16px;
+    color: #333;
+}
+.article-card{
+    background-color: #cff4e3;
+    border-radius: 16px;
+    margin: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+}

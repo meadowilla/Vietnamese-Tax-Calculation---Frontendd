@@ -46,6 +46,10 @@ function App() {
             path="account/create"
             element={user ? <Navigate to="/sotay" replace /> : <SignupScreen />}
           />
+          <Route
+            path='sotay/:id'
+            element={<NotebookScreen />}
+          />
         </Route>
       </Routes>
     </Router>
