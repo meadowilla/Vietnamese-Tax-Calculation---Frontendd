@@ -12,7 +12,16 @@ function TaxCalculationScreen() {
         <label className="label" htmlFor={id}>{label}</label>
         <span className="tooltip-custom">
           ⓘ
-          <span className="tooltip-text">{tooltip}</span>
+          <span className="tooltip-text">{tooltip}
+          <br/>
+            <a
+              href={'/sotay/{id}'}
+              className='tooltip-link'
+              target='_blank'
+              rel='noopener noreferrer'>
+                Xem thêm
+              </a>
+          </span>
         </span>
       </div>
       <input
@@ -31,7 +40,16 @@ function TaxCalculationScreen() {
         <label className="label" htmlFor={id}>{label}</label>
         <span className="tooltip-custom">
           ⓘ
-          <span className="tooltip-text">{tooltip}</span>
+          <span className="tooltip-text">{tooltip}
+            <br/>
+            <a
+              href={'/sotay/{id}'}
+              className='tooltip-link'
+              target='_blank'
+              rel='noopener noreferrer'>
+                Xem thêm
+              </a>
+          </span>
         </span>
       </div>
       <div className="input-wrapper">

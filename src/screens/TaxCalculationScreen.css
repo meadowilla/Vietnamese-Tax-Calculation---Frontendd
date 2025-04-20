@@ -211,7 +211,10 @@ body {
   opacity: 1;
   animation: tooltipSlideIn 0.3s ease;
 }
-
+.tooltip-link{
+  color: #7171b1;
+  
+}
 /* Form Container */
 .form {
   max-width: 1500px;
