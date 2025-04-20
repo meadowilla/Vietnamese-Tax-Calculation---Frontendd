@@ -244,6 +244,7 @@ body {
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
   animation: fadeInUp 1s ease;
+  margin-bottom: 2rem;
 }
 
 /* Button */
