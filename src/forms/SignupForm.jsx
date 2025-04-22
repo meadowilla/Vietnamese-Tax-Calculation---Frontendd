@@ -1,4 +1,4 @@
-import {TextField, Button} from '@mui/material';
+import {TextField} from '@mui/material';
 import {useForm} from 'react-hook-form';
 import {useState} from 'react';
 import {Close, DangerousSharp, VisibilityOffOutlined, VisibilityOutlined} from '@mui/icons-material';
@@ -168,7 +168,7 @@ function SignupForm() {
   
                 {errors.password && 
                   <div className="signupForm__error">
-                    <Icon fontSize="small" />
+                    <Close fontSize="small" />
                     <span>Hãy nhập mật khẩu</span>
                     <DangerousSharp
                       fontSize="small"

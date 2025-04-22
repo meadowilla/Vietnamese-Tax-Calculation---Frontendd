@@ -114,7 +114,7 @@ function LoginScreen() {
 
                 {errors.password && 
                   <div className="loginScreen__error">
-                    <Icon fontSize="small" />
+                    <Close fontSize="small" />
                     <span>Hãy nhập mật khẩu</span>
                     <DangerousSharp
                       fontSize="small"

@@ -64,7 +64,7 @@
 
 .signupForm__reportIcon {
     position: absolute;
-    right: 0;
+    right: 3%;
     top: 0;
     transform: translateY(100%);
 }
@@ -73,7 +73,7 @@
     cursor: pointer;
     color: gray;
     position: absolute;
-    right: 5%;
+    right: 10%;
     transform: translateY(70%);
 }
 
