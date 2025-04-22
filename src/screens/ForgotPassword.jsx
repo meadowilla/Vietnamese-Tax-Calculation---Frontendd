@@ -68,7 +68,7 @@ const ForgotPassword = () => {
 
       {step === 2 && (
         <form className="forgot-card fade-in" onSubmit={handleResetPassword}>
-          <h2>Reset Password</h2>
+          <h2>Đặt lại mật khẩu</h2>
 
           <label>Email</label>
           <input
@@ -79,7 +79,7 @@ const ForgotPassword = () => {
             readOnly
           />
 
-          <label>New Password</label>
+          <label>Mật khẩu mới</label>
           <input
             type="password"
             required
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
             className="input-reset"
           />
 
-          <label>Confirm new password</label>
+          <label>Xác nhận mật khẩu mới</label>
           <input
             type="password"
             required
