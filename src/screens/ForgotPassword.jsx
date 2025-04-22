@@ -106,7 +106,7 @@ const ForgotPassword = () => {
             className="input-reset"
           />
 
-          <button type="submit" className="reset-button">Reset</button>
+          <button type="submit" className="reset-button">Đặt lại mật khẩu</button>
         </form>
       )}
     </div>
