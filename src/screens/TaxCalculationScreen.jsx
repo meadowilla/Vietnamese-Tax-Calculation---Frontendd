@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import "./TaxCalculationScreen.css";
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
@@ -6,7 +6,21 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 function TaxCalculationScreen() {
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
 
-  const renderInput = (label, id, placeholder, tooltip, inputProps = {}) => (
+  const [errors, setErrors] = useState({
+    month: "",
+    year: "",
+    dependents: "",
+  });
+
+  const inputRefs = {
+    month: useRef(null),
+    year: useRef(null),
+    dependents: useRef(null)
+  };
+
+  
+  
+  const renderInput = (label, id, placeholder, tooltip, inputProps = {}, error = "", inputRef = null) => (
     <div className="form-group">
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
@@ -28,12 +42,14 @@ function TaxCalculationScreen() {
         type="number"
         id={id}
         name={id}
-        className="input-box"
+        className={`input-box ${error ? "input-error-border" : ""}`}
         placeholder={placeholder}
         inputMode = "numeric"
         pattern = "[0-9]*"
         {...inputProps}
+        ref={inputRef}
       />
+      {error && <p className="input-error">{error}</p>}
     </div>
   );
 
@@ -133,26 +149,36 @@ function TaxCalculationScreen() {
           onInput: (e) => {
             const value = e.target.value;
             const num = parseInt(value);
-            if (!isNaN(num)) {
-              if (num < 1) e.target.value = 1;
-              if (num > 12) e.target.value = 12;
+            if (isNaN(num) || num < 1 || num > 12) {
+              setErrors(prev => ({ ...prev, month: "Tháng phải từ 1 đến 12" }));
+            } else {
+              setErrors(prev => ({ ...prev, month: "" }));
             }
           }
-        })}
-        {renderInput("Năm", "year", "Nhập năm (VD: 2025)", `Đến ${new Date().getFullYear()}`, {
-          min: 0,
-          max: new Date().getFullYear(),
-          onInput: (e) => {
-            const value = e.target.value;
-            const num = parseInt(value);
-            const max = new Date().getFullYear();
-      
-            if (!isNaN(num)) {
-              if (num < 0) e.target.value = 0;
-              if (num > max) e.target.value = max;
-            }
-          }
-        })}
+        }, errors.month, inputRefs.month)}
+        {renderInput(
+          "Năm",
+          "year",
+          "Nhập năm (VD: 2025)",
+          `Đến ${new Date().getFullYear()}`,
+          {
+            min: 0,
+            max: new Date().getFullYear(),
+            onInput: (e) => {
+              const value = e.target.value;
+              const num = parseInt(value);
+              const max = new Date().getFullYear();
+
+              if (isNaN(num) || num < 0 || num > max) {
+                setErrors(prev => ({ ...prev, year: `Năm phải từ 0 đến ${max}` }));
+              } else {
+                setErrors(prev => ({ ...prev, year: "" }));
+              }
+            },
+          },
+          errors.year, inputRefs.year
+        )}
+
       </div>
 
       <div className="section_infouser">
@@ -171,17 +197,27 @@ function TaxCalculationScreen() {
             </span>
           </label>
         </div>
-        {renderInput("Số người phụ thuộc", "dependents", "Nhập số người", "Người phụ thuộc như con, cha mẹ... đang được bạn nuôi dưỡng.", {
-          min: 0,
-          onInput: (e) => {
-            const value = e.target.value;
-            const num = parseInt(value);
-      
-            if (!isNaN(num) && num < 0) {
-              e.target.value = 0;
+        {renderInput(
+          "Số người phụ thuộc",
+          "dependents",
+          "Nhập số người",
+          "Người phụ thuộc như con, cha mẹ... đang được bạn nuôi dưỡng.",
+          {
+            min: 0,
+            onInput: (e) => {
+              const value = e.target.value;
+              const num = parseInt(value);
+
+              if (isNaN(num) || num < 0) {
+                setErrors(prev => ({ ...prev, dependents: "Số người phụ thuộc phải từ 0 trở lên" }));
+              } else {
+                setErrors(prev => ({ ...prev, dependents: "" }));
+              }
             }
-          }
-        })}
+          },
+          errors.dependents, inputRefs.dependents
+        )}
+
         <div className="form-group">
           <div className="label-with-tooltip">
             <label className="label" htmlFor="region">Vùng</label>
@@ -228,7 +264,7 @@ function TaxCalculationScreen() {
                 id="deductedTax"
                 name="deductedTax"
                 className="input-box"
-                placeholder="Nhập số tiền đã khấu trừ"
+                placeholder="Nhập số tiền đã khấu trừ (đv triệu đồng)"
               />
             )}
           </div>

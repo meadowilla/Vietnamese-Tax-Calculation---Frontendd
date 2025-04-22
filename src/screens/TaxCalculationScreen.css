@@ -112,7 +112,7 @@ body {
 /* Input */
 .input-box {
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   padding: 0.6rem 1rem;
   margin-left: 1.5rem;
   border-radius: 16px;
@@ -217,9 +217,9 @@ body {
 }
 /* Form Container */
 .form {
-  max-width: 1500px;
+  max-width: 2000px;
   margin: 0 auto;
-  padding: 0 10rem;
+  padding: 0 3rem;
 }
 
 
@@ -349,3 +349,13 @@ html {
     gap: 0.5rem;
   }
   
+  .input-error-border {
+    border: 2px solid #e74c3c !important;
+    background-color: #fff6f6;
+  }
+  .input-error {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+    
