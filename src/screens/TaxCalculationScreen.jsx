@@ -6,7 +6,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 function TaxCalculationScreen() {
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
 
-  const renderInput = (label, id, placeholder, tooltip) => (
+  const renderInput = (label, id, placeholder, tooltip, inputProps = {}) => (
     <div className="form-group">
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
@@ -30,6 +30,9 @@ function TaxCalculationScreen() {
         name={id}
         className="input-box"
         placeholder={placeholder}
+        inputMode = "numeric"
+        pattern = "[0-9]*"
+        {...inputProps}
       />
     </div>
   );
@@ -124,8 +127,32 @@ function TaxCalculationScreen() {
     <div className="form">
       <div className="section_infotax">
         <h2 className="heading">Thuế thu nhập</h2>
-        {renderInput("Tháng", "month", "Nhập tháng (1 - 12)", "Tháng áp dụng thuế")}
-        {renderInput("Năm", "year", "Nhập năm (VD: 2025)", `Đến ${new Date().getFullYear()}`)}
+        {renderInput("Tháng", "month", "Nhập tháng (1 - 12)", "Tháng áp dụng thuế", {
+          min: 1,
+          max: 12,
+          onInput: (e) => {
+            const value = e.target.value;
+            const num = parseInt(value);
+            if (!isNaN(num)) {
+              if (num < 1) e.target.value = 1;
+              if (num > 12) e.target.value = 12;
+            }
+          }
+        })}
+        {renderInput("Năm", "year", "Nhập năm (VD: 2025)", `Đến ${new Date().getFullYear()}`, {
+          min: 0,
+          max: new Date().getFullYear(),
+          onInput: (e) => {
+            const value = e.target.value;
+            const num = parseInt(value);
+            const max = new Date().getFullYear();
+      
+            if (!isNaN(num)) {
+              if (num < 0) e.target.value = 0;
+              if (num > max) e.target.value = max;
+            }
+          }
+        })}
       </div>
 
       <div className="section_infouser">
@@ -144,7 +171,17 @@ function TaxCalculationScreen() {
             </span>
           </label>
         </div>
-        {renderInput("Số người phụ thuộc", "dependents", "Nhập số người", "Người phụ thuộc như con, cha mẹ... đang được bạn nuôi dưỡng.")}
+        {renderInput("Số người phụ thuộc", "dependents", "Nhập số người", "Người phụ thuộc như con, cha mẹ... đang được bạn nuôi dưỡng.", {
+          min: 0,
+          onInput: (e) => {
+            const value = e.target.value;
+            const num = parseInt(value);
+      
+            if (!isNaN(num) && num < 0) {
+              e.target.value = 0;
+            }
+          }
+        })}
         <div className="form-group">
           <div className="label-with-tooltip">
             <label className="label" htmlFor="region">Vùng</label>
