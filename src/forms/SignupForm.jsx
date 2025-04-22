@@ -81,7 +81,7 @@ function SignupForm() {
                   // error={!!errors.fName}
                   {...register("firstName", { required: true })}
                 />
-                {errors.fName && 
+                {errors.firstName && 
                   <div className="signupForm__error">
                     <Close fontSize="small" />
                     <span>Hãy nhập họ</span>
@@ -105,7 +105,7 @@ function SignupForm() {
                   // error={!!errors.lName}
                   {...register("lastName", { required: true })}
                 />
-                {errors.lName && 
+                {errors.lastName && 
                   <div className="signupForm__error">
                     <Close fontSize="small" />
                     <span>Hãy nhập tên</span>
