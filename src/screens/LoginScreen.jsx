@@ -125,7 +125,7 @@ function LoginScreen() {
               </div>
 
               <div className='loginScreen__resetLink'>
-                <Link >Quên mật khẩu?</Link>
+                <Link to="/account/forgot-password">Quên mật khẩu?</Link>
               </div>
 
               <FormSubmit name="Đăng nhập" type="submit" variant='contained'></FormSubmit>

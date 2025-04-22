@@ -18,6 +18,15 @@ function TaxCalculationScreen() {
     dependents: useRef(null)
   };
 
+  const validateInput = (value, type) => {
+    const regex = /^[0-9]*$/; // Chỉ cho phép số
+    if (!value.match(regex)) {
+      console.log(`${type} chỉ được nhập số`);
+      return `${type} chỉ được nhập số`;
+    }
+    return "";
+  };
+
   
   
   const renderInput = (label, id, placeholder, tooltip, inputProps = {}, error = "", inputRef = null) => (
@@ -39,15 +48,24 @@ function TaxCalculationScreen() {
         </span>
       </div>
       <input
-        type="number"
+        type="text"
         id={id}
         name={id}
         className={`input-box ${error ? "input-error-border" : ""}`}
         placeholder={placeholder}
-        inputMode = "numeric"
-        pattern = "[0-9]*"
         {...inputProps}
         ref={inputRef}
+        onInput={(e) => {
+          const value = e.target.value;
+          const errorMessage = validateInput(value, label);
+          if (errorMessage) {
+            setErrors(prev => ({ ...prev, [id]: errorMessage }));
+          } else {
+            setErrors(prev => ({ ...prev, [id]: "" }));
+          }
+          if (inputProps.onInput) inputProps.onInput(e);
+        }}
+  
       />
       {error && <p className="input-error">{error}</p>}
     </div>

@@ -7,6 +7,7 @@ import NotebookScreen from './screens/NotebookScreen';
 import TaxCalculationScreen from './screens/TaxCalculationScreen';
 import UserStorageScreen from './screens/UserStorageScreen';
 import ContactScreen from './screens/ContactScreen';
+import ForgotPassword from './screens/ForgotPassword';
 import { useEffect, useState } from 'react';
 import './App.css';
 
@@ -69,6 +70,11 @@ function App() {
               path="account/create"
               element={user ? <Navigate to="/sotay" replace /> : <SignupScreen />}
             />
+            <Route
+              path="account/forgot-password"
+              element={<ForgotPassword />}
+            />
+
             <Route
             path='sotay/:id'
             element={<NotebookScreen />}
