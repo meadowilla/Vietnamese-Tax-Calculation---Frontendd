@@ -29,7 +29,7 @@ function TaxCalculationScreen() {
 
   
   
-  const renderInput = (label, id, placeholder, tooltip, inputProps = {}, error = "", inputRef = null) => (
+  const renderInput = (label, id, placeholder, tooltip, inputProps = {}, error = "", inputRef = null, articleId = null) => (
     <div className="form-group">
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
@@ -37,13 +37,15 @@ function TaxCalculationScreen() {
           ⓘ
           <span className="tooltip-text">{tooltip}
           <br/>
-            <a
-              href={'/sotay/{id}'}
-              className='tooltip-link'
-              target='_blank'
-              rel='noopener noreferrer'>
+            {articleId && (
+              <a
+                href={`/sotay/${articleId}`}
+                className='tooltip-link'
+                target='_blank'
+                rel='noopener noreferrer'>
                 Xem thêm
               </a>
+            )}
           </span>
         </span>
       </div>
@@ -71,7 +73,7 @@ function TaxCalculationScreen() {
     </div>
   );
 
-  const renderInputWithRadio = (label, id, placeholder, tooltip, radioName) => (
+  const renderInputWithRadio = (label, id, placeholder, tooltip, radioName, articleId = null) => (
     <div className="form-group">
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
@@ -80,7 +82,7 @@ function TaxCalculationScreen() {
           <span className="tooltip-text">{tooltip}
             <br/>
             <a
-              href={'/sotay/{id}'}
+              href={`/sotay/{articleId}`}
               className='tooltip-link'
               target='_blank'
               rel='noopener noreferrer'>
@@ -173,7 +175,8 @@ function TaxCalculationScreen() {
               setErrors(prev => ({ ...prev, month: "" }));
             }
           }
-        }, errors.month, inputRefs.month)}
+        }, errors.month, inputRefs.month, 1 //1 là id của article
+        )} 
         {renderInput(
           "Năm",
           "year",
@@ -194,7 +197,7 @@ function TaxCalculationScreen() {
               }
             },
           },
-          errors.year, inputRefs.year
+          errors.year, inputRefs.year, 2
         )}
 
       </div>
@@ -233,7 +236,7 @@ function TaxCalculationScreen() {
               }
             }
           },
-          errors.dependents, inputRefs.dependents
+          errors.dependents, inputRefs.dependents, 3
         )}
 
         <div className="form-group">

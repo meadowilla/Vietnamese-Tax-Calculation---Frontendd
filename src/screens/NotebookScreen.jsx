@@ -36,7 +36,6 @@ function NotebookScreen() {
 
   return (
     <div className="about-container">
-      <h1 className="heading">Về chúng tôi</h1>
       <div className="card-list">
         {articles.map(article => (
           <div className="article-card" key={article.id}>
