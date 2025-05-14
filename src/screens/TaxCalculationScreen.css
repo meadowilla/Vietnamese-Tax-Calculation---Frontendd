@@ -5,6 +5,7 @@
   --bg-pink: #fef6f4;
   --bg-income: #f3f1e7;
   --bg-reduced: #e0f4f3;
+  --bg-business: #dfeee2;
   --font-main: 'Helvetica Neue', 'Segoe UI', sans-serif;
 }
 
@@ -359,3 +360,15 @@ html {
     margin-top: 4px;
   }
     
+.section_business_income {
+  background-color: var(--bg-business);
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-main);
+  width: 100%;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease;
+  border: 1px solid #d4e8e2;
+}

@@ -5,6 +5,26 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 
 function TaxCalculationScreen() {
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
+  const [formData, setFormData] = useState({
+    paymentDate: '',
+    dueDate: '',
+    submittedDate: '',
+  });
+
+  // State cho phần thu nhập kinh doanh
+  const [businessIncomeType, setBusinessIncomeType] = useState('fixedRate');
+  const [fixedRateIncomes, setFixedRateIncomes] = useState({
+    goodsDistribution: '',
+    serviceConstruction: '',
+    propertyRental: '',
+    agencyServices: '',
+    productionTransport: '',
+    otherBusiness: ''
+  });
+  const [netIncome, setNetIncome] = useState({
+    totalRevenue: '',
+    deductibleCost: ''
+  });
 
   const [errors, setErrors] = useState({
     month: "",
@@ -14,16 +34,22 @@ function TaxCalculationScreen() {
     shortTermIncome: "",
     foreignIncome: "",
     deductedTax: "",
-    source0: "",
     source1: "",
     source2: "",
     source3: "",
     source4: "",
     source5: "",
     source6: "",
-    biz0: "",
-    biz1: "",
-    biz2: "",
+    // Errors cho thuế khoán
+    goodsDistribution: "",
+    serviceConstruction: "",
+    propertyRental: "",
+    agencyServices: "",
+    productionTransport: "",
+    otherBusiness: "",
+    // Errors cho thuế ròng
+    totalRevenue: "",
+    deductibleCost: "",
   });
 
   const inputRefs = {
@@ -34,10 +60,15 @@ function TaxCalculationScreen() {
     shortTermIncome: useRef(null),
     foreignIncome: useRef(null),
     deductedTax: useRef(null),
+    paymentDate: useRef(null),
+    dueDate: useRef(null),
+    submittedDate: useRef(null),
   };
 
-  const validateInput = (value, type) => {
-    const regex = /^[0-9]*$/; // Chỉ cho phép số
+  const validateInput = (value, type, inputType) => {
+    if (inputType === 'date') return "";
+
+    const regex = /^[0-9]*$/;
     if (!value.match(regex)) {
       return `${type} chỉ được nhập số lớn hơn hoặc bằng 0`;
     }
@@ -52,18 +83,16 @@ function TaxCalculationScreen() {
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
         <span className="tooltip-custom">
-          ⓘ
-          <span className="tooltip-text">{tooltip}
-          <br/>
-            {articleId && (
-              <a
-                href={`/sotay/${articleId}`}
-                className='tooltip-link'
-                target='_blank'
-                rel='noopener noreferrer'>
-                Xem thêm
-              </a>
-            )}
+          ⓘ <span className="tooltip-text">{tooltip} <br/>
+          {articleId && (
+            <a
+              href={`/sotay/${articleId}`}
+              className='tooltip-link'
+              target='_blank'
+              rel='noopener noreferrer'>
+              Xem thêm
+            </a>
+          )}
           </span>
         </span>
       </div>
@@ -77,7 +106,7 @@ function TaxCalculationScreen() {
         ref={inputRef}
         onInput={(e) => {
           const value = e.target.value;
-          const errorMessage = validateInput(value, label);
+          const errorMessage = validateInput(value, label, inputProps.type);
           setErrors(prev => ({ ...prev, [id]: errorMessage }));
           if (inputProps.onInput) inputProps.onInput(e);
         }}
@@ -91,18 +120,16 @@ function TaxCalculationScreen() {
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
         <span className="tooltip-custom">
-          ⓘ
-          <span className="tooltip-text">{tooltip}
-            <br/>
-            {articleId && (
-              <a
-                href={`/sotay/${articleId}`}
-                className='tooltip-link'
-                target='_blank'
-                rel='noopener noreferrer'>
-                Xem thêm
-              </a>
-            )}
+          ⓘ <span className="tooltip-text">{tooltip} <br/>
+          {articleId && (
+            <a
+              href={`/sotay/${articleId}`}
+              className='tooltip-link'
+              target='_blank'
+              rel='noopener noreferrer'>
+              Xem thêm
+            </a>
+          )}
           </span>
         </span>
       </div>
@@ -137,35 +164,182 @@ function TaxCalculationScreen() {
     </div>
   );
 
+  const renderBusinessIncomeSection = () => (
+    <div className="business-income-container">
+      <div className="radio-group business-income-type">
+        <label className="radio-label">
+          <input 
+            type="radio" 
+            name="businessIncomeType" 
+            value="fixedRate" 
+            checked={businessIncomeType === 'fixedRate'}
+            onChange={() => setBusinessIncomeType('fixedRate')}
+          />
+          <span className="radio-text">Theo doanh thu khoán
+            <span className="tooltip-custom">ⓘ<span className="tooltip-text">Phù hợp với doanh thu nhỏ ổn định, áp dụng khi doanh thu trên 100 triệu/năm</span></span>
+          </span>
+        </label>
+        <label className="radio-label">
+          <input 
+            type="radio" 
+            name="businessIncomeType" 
+            value="netIncome" 
+            checked={businessIncomeType === 'netIncome'}
+            onChange={() => setBusinessIncomeType('netIncome')}
+          />
+          <span className="radio-text">Theo thu nhập ròng
+            <span className="tooltip-custom">ⓘ<span className="tooltip-text">Phù hợp với kinh doanh quy mô lớn, có đầy đủ sổ sách, chứng từ về doanh thu và chi phí</span></span>
+          </span>
+        </label>
+      </div>
+
+      {businessIncomeType === 'fixedRate' ? (
+        <div className="fixed-rate-options">
+          <h4 className="sub-heading">Khai báo doanh thu theo ngành nghề</h4>
+          
+          {renderInput(
+            "1. Phân phối, cung cấp hàng hóa (1.5%)",
+            "goodsDistribution",
+            "Nhập thu nhập (đv triệu đồng)",
+            "Áp dụng thuế suất 1.5% (1% GTGT + 0.5% TNCN)",
+            {
+              value: fixedRateIncomes.goodsDistribution,
+              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, goodsDistribution: e.target.value})
+            },
+            errors.goodsDistribution,
+            null,
+            11
+          )}
+
+          {renderInput(
+            "2. Dịch vụ, xây dựng không bao thầu nguyên vật liệu (7%)",
+            "serviceConstruction",
+            "Nhập thu nhập (đv triệu đồng)",
+            "Áp dụng thuế suất 7% (5% GTGT + 2% TNCN)",
+            {
+              value: fixedRateIncomes.serviceConstruction,
+              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, serviceConstruction: e.target.value})
+            },
+            errors.serviceConstruction,
+            null,
+            12
+          )}
+
+          {renderInput(
+            "3. Cho thuê tài sản (10%)",
+            "propertyRental",
+            "Nhập thu nhập (đv triệu đồng)",
+            "Áp dụng thuế suất 10% (5% GTGT + 5% TNCN)",
+            {
+              value: fixedRateIncomes.propertyRental,
+              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, propertyRental: e.target.value})
+            },
+            errors.propertyRental,
+            null,
+            13
+          )}
+
+          {renderInput(
+            "4. Đại lý xổ số, bảo hiểm, bán hàng đa cấp (5%)",
+            "agencyServices",
+            "Nhập thu nhập (đv triệu đồng)",
+            "Áp dụng thuế suất 5% (0% GTGT + 5% TNCN)",
+            {
+              value: fixedRateIncomes.agencyServices,
+              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, agencyServices: e.target.value})
+            },
+            errors.agencyServices,
+            null,
+            14
+          )}
+
+          {renderInput(
+            "5. Sản xuất, vận tải, dịch vụ gắn với hàng hóa (4.5%)",
+            "productionTransport",
+            "Nhập thu nhập (đv triệu đồng)",
+            "Áp dụng thuế suất 4.5% (3% GTGT + 1.5% TNCN)",
+            {
+              value: fixedRateIncomes.productionTransport,
+              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, productionTransport: e.target.value})
+            },
+            errors.productionTransport,
+            null,
+            15
+          )}
+
+          {renderInput(
+            "6. Hoạt động kinh doanh khác (3%)",
+            "otherBusiness",
+            "Nhập thu nhập (đv triệu đồng)",
+            "Áp dụng thuế suất 3% (2% GTGT + 1% TNCN)",
+            {
+              value: fixedRateIncomes.otherBusiness,
+              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, otherBusiness: e.target.value})
+            },
+            errors.otherBusiness,
+            null,
+            16
+          )}
+        </div>
+      ) : (
+        <div className="net-income-options">
+          <h4 className="sub-heading">Khai báo thu nhập ròng</h4>
+          {renderInput(
+            "Tổng doanh thu",
+            "totalRevenue",
+            "Nhập tổng thu nhập (đv triệu đồng)",
+            "Tổng doanh thu từ hoạt động kinh doanh",
+            {
+              value: netIncome.totalRevenue,
+              onChange: (e) => setNetIncome({...netIncome, totalRevenue: e.target.value})
+            },
+            errors.totalRevenue,
+            null,
+            17
+          )}
+
+          {renderInput(
+            "Chi phí hợp lệ",
+            "deductibleCost",
+            "Nhập chi phí (đv triệu đồng)",
+            "Các chi phí hợp lệ được trừ khi tính thuế",
+            {
+              value: netIncome.deductibleCost,
+              onChange: (e) => setNetIncome({...netIncome, deductibleCost: e.target.value})
+            },
+            errors.deductibleCost,
+            null,
+            18
+          )}
+        </div>
+      )}
+    </div>
+  );
+
   const incomeSources = [
     {
-      label: "Thu nhập từ cho thuê tài sản",
-      tooltip: "Bao gồm: Nhà, xe, máy móc, cửa hàng, mặt bằng… Thuế áp dụng là 10% (5% thuế GTGT, 5% thuế TNCN) nếu tổng thu nhập lớn hơn 100 triệu/năm.",
-      articleId: 4
-    },
-    {
       label: "Thu nhập từ chuyển nhượng bất động sản",
-      tooltip: "Bán nhà đất. Thuế áp dụng là 2% trên giá chuyển nhượng",
+      tooltip: "Thuế áp dụng là 2% trên giá chuyển nhượng. Thông thường khi công chứng, cơ quan thuế đã yêu cầu nộp thuế trước khi làm thủ tục sang tên.",
       articleId: 5
     },
     {
       label: "Thu nhập từ đầu tư vốn",
-      tooltip: "Góp vốn, lợi tức, cổ tức…  Thuế áp dụng là 5% trên phần thu nhập được chia.",
+      tooltip: "Góp vốn, lợi tức, cổ tức… Thuế áp dụng là 5% trên phần thu nhập được chia. Thông thường công ty đã khấu trừ thuế trước khi tả cho nhà đầu tư.",
       articleId: 6
     },
     {
-      label: "Thu nhập từ chuyển nhượng chứng khoán",
-      tooltip: "Thuế áp dụng là 0.1% trên giá chuyển nhượng",
+      label: "Thu nhập từ chuyển nhượng vốn",
+      tooltip: "Thuế áp dụng là 0.1% trên giá chuyển nhượng. Thông thường đã khấu từ thuế trước khi chuyển nhượng.",
       articleId: 7
     },
     {
       label: "Thu nhập từ bản quyền, nhượng quyền thương mại",
-      tooltip: "Nếu doanh thu lớn hơn 100 triệu/năm, thuế áp dụng là 10% (5% thuế GTGT, 5% thuế TNCN)",
+      tooltip: "Thuế áp dụng là 5% trên phần giá trị chuyển nhượng vượt 10 triệu đồng/lần. Thông thường bên nhận quyền sử dụng đã khấu trừ thuế.",
       articleId: 8
     },
     {
       label: "Thu nhập từ trúng thưởng",
-      tooltip: "Bao gồm: Xổ số, trúng thưởng game show, cá cược thể thao (hợp pháp), khuyến mại lớn... Thuế áp dụng là 10% trên phần giá trị trúng vượt 10 triệu đồng/lần.",
+      tooltip: "Bao gồm: Xổ số, trúng thưởng game show, cá cược thể thao (hợp pháp), khuyến mại lớn... Thuế áp dụng là 10% trên phần giá trị trúng vượt 10 triệu đồng/lần. Thông thường bên tổ chức đã khấu trừ thuế.",
       articleId: 9
     },
     {
@@ -175,63 +349,34 @@ function TaxCalculationScreen() {
     },
   ];
 
-  const businessIncomes = [
-    {
-      label: "Bán hàng hoá",
-      tooltip: "Thuế áp dụng là 1,5%(1% thuế GTGT, 0,5% thuế TNCN).",
-      articleId: 11
-    },
-    {
-      label: "Dịch vụ, tư vấn, ăn uống",
-      tooltip: "Thuế áp dụng là 7%(5% thuế GTGT,2% thuế TNCN).",
-      articleId: 12
-    },
-    {
-      label: "Vận tải, xây dựng không vật tư",
-      tooltip: "Thuế áp dụng là 2%(1.5% thuế GTGT, 0.5% thuế TNCN).",
-      articleId: 13
-    },
-  ];
-
   return (
     <div className="form">
       <div className="section_infotax">
         <h2 className="heading">Thuế thu nhập</h2>
-        {renderInput("Tháng", "month", "Nhập tháng (1 - 12)", "Tháng áp dụng thuế", {
-          min: 1,
-          max: 12,
-          onInput: (e) => {
+        {renderInput("Ngày nhận tiền", "paymentDate", "Nhập ngày nhận tiền (YYYY-MM-DD)", "Ngày bạn nhận thu nhập", {
+          type: "date",
+          value: formData.paymentDate,
+          onChange: (e) => {
             const value = e.target.value;
-            const num = parseInt(value);
-            if (isNaN(num) || num < 1 || num > 12) {
-              setErrors(prev => ({ ...prev, month: "Tháng phải từ 1 đến 12" }));
-            } else {
-              setErrors(prev => ({ ...prev, month: "" }));
-            }
+            setFormData(prev => ({
+              ...prev,
+              paymentDate: value,
+              dueDate: value ?
+                new Date(new Date(value).getTime() + 10 * 24 * 60 * 60 * 1000)
+                .toISOString().split('T')[0]
+                : ''
+            }));
           }
-        }, errors.month, inputRefs.month, 1)}
-        {renderInput(
-          "Năm",
-          "year",
-          "Nhập năm (VD: 2025)",
-          `Đến ${new Date().getFullYear()}`,
-          {
-            min: 0,
-            max: new Date().getFullYear(),
-            onInput: (e) => {
-              const value = e.target.value;
-              const num = parseInt(value);
-              const max = new Date().getFullYear();
+        }, errors.paymentDate, inputRefs.paymentDate, 3)}
 
-              if (isNaN(num) || num < 0 || num > max) {
-                setErrors(prev => ({ ...prev, year: `Năm phải từ 0 đến ${max}` }));
-              } else {
-                setErrors(prev => ({ ...prev, year: "" }));
-              }
-            },
-          },
-          errors.year, inputRefs.year, 2
-        )}
+        {renderInput("Ngày nộp thuế", "submittedDate", "Ngày bạn thực tế nộp thuế", "So sánh với hạn", {
+          type: "date",
+          value: formData.submittedDate,
+          onChange: (e) => {
+            const value = e.target.value;
+            setFormData(prev => ({ ...prev, submittedDate: value }));
+          }
+        }, errors.submittedDate, inputRefs.submittedDate, 5)}
       </div>
 
       <div className="section_infouser">
@@ -284,7 +429,7 @@ function TaxCalculationScreen() {
       </div>
 
       <div className="section_income">
-        <h2 className="heading">Thông tin thu nhập</h2>
+        <h2 className="heading">Thu nhập tính thuế theo biểu thuế lũy tiến từng phần</h2>
         {renderInputWithRadio(
           "Thu nhập có hợp đồng lao động trên ba tháng",
           "longTermIncome",
@@ -352,40 +497,80 @@ function TaxCalculationScreen() {
         </div>
       </div>
 
+      {/* Phần thu nhập từ kinh doanh - tách riêng thành box mới */}
+      <div className="section_business_income">
+        <h2 className="heading">Thu nhập từ kinh doanh</h2>
+        {renderBusinessIncomeSection()}
+      </div>
+
       <div className="section_income_reduced">
-        <h2 className="heading">Thông tin thu nhập khấu trừ tại nguồn</h2>
-        {incomeSources.map((item, index) => renderInput(
-          item.label,
-          `source${index}`,
+        <h2 className="heading">Thu nhập chịu thuế theo từng lần phát sinh</h2>
+        {renderInputWithRadio(
+          incomeSources[0].label,
+          "source1",
           "Nhập thu nhập (đv triệu đồng)",
-          item.tooltip,
+          incomeSources[0].tooltip,
+          "source1Taxed",
           {},
-          errors[`source${index}`],
+          errors.source1,
           null,
-          item.articleId
-        ))}
-        <div className="form-group">
-          <div className="label-with-tooltip">
-            <label className="label">Thu nhập từ kinh doanh</label>
-            <span className="tooltip-custom">ⓘ<span className="tooltip-text">Nếu không đăng kí doanh nghiệp</span></span>
-          </div>
-          <div className="business-income-group">
-            {businessIncomes.map((item, index) => (
-              <div key={index} className="business-item">
-                {renderInput(
-                  item.label,
-                  `biz${index}`,
-                  "Nhập thu nhập (đv triệu đồng)",
-                  item.tooltip,
-                  {},
-                  errors[`biz${index}`],
-                  null,
-                  item.articleId
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+          incomeSources[0].articleId
+        )}
+        {renderInputWithRadio(
+          incomeSources[1].label,
+          "source2",
+          "Nhập thu nhập (đv triệu đồng)",
+          incomeSources[1].tooltip,
+          "source2Taxed",
+          {},
+          errors.source2,
+          null,
+          incomeSources[1].articleId
+        )}
+        {renderInputWithRadio(
+          incomeSources[2].label,
+          "source3",
+          "Nhập thu nhập (đv triệu đồng)",
+          incomeSources[2].tooltip,
+          "source3Taxed",
+          {},
+          errors.source3,
+          null,
+          incomeSources[2].articleId
+        )}
+        {renderInputWithRadio(
+          incomeSources[3].label,
+          "source4",
+          "Nhập thu nhập (đv triệu đồng)",
+          incomeSources[3].tooltip,
+          "source4Taxed",
+          {},
+          errors.source4,
+          null,
+          incomeSources[3].articleId
+        )}
+        {renderInputWithRadio(
+          incomeSources[4].label,
+          "source5",
+          "Nhập thu nhập (đv triệu đồng)",
+          incomeSources[4].tooltip,
+          "source5Taxed",
+          {},
+          errors.source5,
+          null,
+          incomeSources[4].articleId
+        )}
+        {renderInputWithRadio(
+          incomeSources[5].label,
+          "source6",
+          "Nhập thu nhập (đv triệu đồng)",
+          incomeSources[5].tooltip,
+          "source6Taxed",
+          {},
+          errors.source6,
+          null,
+          incomeSources[5].articleId
+        )}
       </div>
 
       <div className="result-section">
