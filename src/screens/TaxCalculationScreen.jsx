@@ -353,30 +353,44 @@ function TaxCalculationScreen() {
     <div className="form">
       <div className="section_infotax">
         <h2 className="heading">Thuế thu nhập</h2>
-        {renderInput("Ngày nhận tiền", "paymentDate", "Nhập ngày nhận tiền (YYYY-MM-DD)", "Ngày bạn nhận thu nhập", {
-          type: "date",
-          value: formData.paymentDate,
-          onChange: (e) => {
-            const value = e.target.value;
-            setFormData(prev => ({
-              ...prev,
-              paymentDate: value,
-              dueDate: value ?
-                new Date(new Date(value).getTime() + 10 * 24 * 60 * 60 * 1000)
-                  .toISOString().split('T')[0]
-                : ''
-            }));
-          }
-        }, errors.paymentDate, inputRefs.paymentDate, 3)}
+      
 
-        {renderInput("Ngày nộp thuế", "submittedDate", "Ngày bạn thực tế nộp thuế", "So sánh với hạn", {
-          type: "date",
-          value: formData.submittedDate,
-          onChange: (e) => {
+        {renderInput("Tháng", "month", "Nhập tháng (1 - 12)", "Tháng áp dụng thuế", {
+          min: 1,
+          max: 12,
+          onInput: (e) => {
             const value = e.target.value;
-            setFormData(prev => ({ ...prev, submittedDate: value }));
+            const num = parseInt(value);
+            if (isNaN(num) || num < 1 || num > 12) {
+              setErrors(prev => ({ ...prev, month: "Tháng phải từ 1 đến 12" }));
+            } else {
+              setErrors(prev => ({ ...prev, month: "" }));
+            }
           }
-        }, errors.submittedDate, inputRefs.submittedDate, 5)}
+        }, errors.month, inputRefs.month, 1)}
+        
+        {renderInput(
+          "Năm",
+          "year",
+          "Nhập năm (VD: 2025)",
+          `Đến ${new Date().getFullYear()}`,
+          {
+            min: 0,
+            max: new Date().getFullYear(),
+            onInput: (e) => {
+              const value = e.target.value;
+              const num = parseInt(value);
+              const max = new Date().getFullYear();
+
+              if (isNaN(num) || num < 0 || num > max) {
+                setErrors(prev => ({ ...prev, year: `Năm phải từ 0 đến ${max}` }));
+              } else {
+                setErrors(prev => ({ ...prev, year: "" }));
+              }
+            },
+          },
+          errors.year, inputRefs.year, 2
+        )}
       </div>
 
       <div className="section_infouser">
@@ -505,6 +519,15 @@ function TaxCalculationScreen() {
 
       <div className="section_income_reduced">
         <h2 className="heading">Thu nhập chịu thuế theo từng lần phát sinh</h2>
+        {renderInput("Ngày nộp thuế", "submittedDate", "Ngày bạn thực tế nộp thuế", "So sánh với hạn", {
+          type: "date",
+          value: formData.submittedDate,
+          onChange: (e) => {
+            const value = e.target.value;
+            setFormData(prev => ({ ...prev, submittedDate: value }));
+          }
+        }, errors.submittedDate, inputRefs.submittedDate, 5)}
+
         {renderInputWithRadio(
           incomeSources[0].label,
           "source1",
