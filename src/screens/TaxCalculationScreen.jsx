@@ -7,8 +7,6 @@ function TaxCalculationScreen() {
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
   const [formData, setFormData] = useState({
     paymentDate: '',
-    dueDate: '',
-    submittedDate: '',
   });
 
   // State cho phần thu nhập kinh doanh
@@ -61,9 +59,21 @@ function TaxCalculationScreen() {
     foreignIncome: useRef(null),
     deductedTax: useRef(null),
     paymentDate: useRef(null),
-    dueDate: useRef(null),
-    submittedDate: useRef(null),
+
+    // once_off_income
+    realEstate: useRef(null),
+    investment: useRef(null),
+    capitalTransfer: useRef(null),
+    royalty: useRef(null),
+    lottery: useRef(null),
+    inheritance: useRef(null),
   };
+
+  const [results, setResults] = useState({
+    totalIncome: 0,
+    taxOwed: 0,
+    taxPaid: 0
+  });
 
   const validateInput = (value, type, inputType) => {
     if (inputType === 'date') return "";
@@ -349,6 +359,84 @@ function TaxCalculationScreen() {
     },
   ];
 
+  const toFloat = (value) => parseFloat(parseFloat(value || '0').toFixed(2));
+  const handleTaxCalculation = async () => {
+    const payload = {
+    // Thuế thu nhập
+    month: parseInt(inputRefs.month.current?.value || '1', 10),
+    year: parseInt(inputRefs.year.current?.value || '2025', 10),
+
+    // Thông tin người dùng
+    residency: (document.querySelector('input[name="residency"]:checked')?.value === 'resident'),
+    dependents: toFloat(inputRefs.dependents.current?.value),
+    region: parseInt(document.querySelector('select[name="region"]').value || '0', 10),
+
+    // Thu nhập tính thuế theo biểu thuế lũy tiến từng phần
+    income_labor_contract: toFloat(inputRefs.longTermIncome.current?.value),
+    taxed_labor_contract: (document.querySelector('input[name="longTermTaxed"]:checked')?.value === 'yes'),
+    income_no_contract: toFloat(inputRefs.shortTermIncome.current?.value),
+    taxed_no_contract: (document.querySelector('input[name="shortTermIncome"]:checked')?.value === 'yes'),
+    income_foreign_contract: toFloat(inputRefs.foreignIncome.current?.value),
+    deducted_tax_abroad: toFloat(inputRefs.deductedTax.current?.value),
+
+    // Thu nhập từ kinh doanh
+    use_flat_rate: (businessIncomeType === 'fixedRate'),
+    business_income_flat: {
+      distribution: toFloat(fixedRateIncomes.goodsDistribution),
+      service: toFloat(fixedRateIncomes.serviceConstruction),
+      rent: toFloat(fixedRateIncomes.propertyRental),
+      agent: toFloat(fixedRateIncomes.agencyServices),
+      production: toFloat(fixedRateIncomes.productionTransport),
+      others: toFloat(fixedRateIncomes.otherBusiness),
+    },
+    net_income: {
+      total_revenue: toFloat(netIncome.totalRevenue),
+      deductible_cost: toFloat(netIncome.deductibleCost),
+    },
+
+    // Thu nhập chịu thuế theo từng lần phát sinh
+    payment_date: inputRefs.paymentDate.current?.value || '',
+    once_off_income: {
+      real_estate: toFloat(inputRefs.realEstate.current?.value),
+      investment: toFloat(inputRefs.investment.current?.value),
+      capital_transfer: toFloat(inputRefs.capitalTransfer.current?.value),
+      royalty: toFloat(inputRefs.royalty.current?.value),
+      lottery: toFloat(inputRefs.lottery.current?.value),
+      inheritance: toFloat(inputRefs.inheritance.current?.value),
+    },
+    taxed_once_off: {
+      real_estate: (document.querySelector('input[name="source1Taxed"]:checked')?.value === 'yes'),
+      investment: (document.querySelector('input[name="source2Taxed"]:checked')?.value === 'yes'),
+      capital_transfer: (document.querySelector('input[name="source3Taxed"]:checked')?.value === 'yes'),
+      royalty: (document.querySelector('input[name="source4Taxed"]:checked')?.value === 'yes'),
+      lottery: (document.querySelector('input[name="source5Taxed"]:checked')?.value === 'yes'),
+      inheritance: (document.querySelector('input[name="source6Taxed"]:checked')?.value === 'yes'),
+    },
+  };
+    console.log("payload:", payload);
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/calculate-tax', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      setResults({
+        totalIncome: result.total_income,
+        taxOwed: result.tax_need_to_pay,
+        taxPaid: result.tax_paid
+      });
+      console.log("result:", result);
+    } catch (error) {
+      console.error('Lỗi khi gửi dữ liệu:', error);
+    }
+  };
+
+
   return (
     <div className="form">
       <div className="section_infotax">
@@ -519,14 +607,14 @@ function TaxCalculationScreen() {
 
       <div className="section_income_reduced">
         <h2 className="heading">Thu nhập chịu thuế theo từng lần phát sinh</h2>
-        {renderInput("Ngày nộp thuế", "submittedDate", "Ngày bạn thực tế nộp thuế", "So sánh với hạn", {
+        {renderInput("Ngày nhận tiền", "paymentDate", "Ngày bạn nhận được tiền", "Ngày bạn nhận được tiền", {
           type: "date",
-          value: formData.submittedDate,
+          value: formData.paymentDate,
           onChange: (e) => {
             const value = e.target.value;
-            setFormData(prev => ({ ...prev, submittedDate: value }));
+            setFormData(prev => ({ ...prev, paymentDate: value }));
           }
-        }, errors.submittedDate, inputRefs.submittedDate, 5)}
+        }, errors.paymentDate, inputRefs.paymentDate, 5)}
 
         {renderInputWithRadio(
           incomeSources[0].label,
@@ -536,7 +624,7 @@ function TaxCalculationScreen() {
           "source1Taxed",
           {},
           errors.source1,
-          null,
+          inputRefs.realEstate,
           incomeSources[0].articleId
         )}
         {renderInputWithRadio(
@@ -547,7 +635,7 @@ function TaxCalculationScreen() {
           "source2Taxed",
           {},
           errors.source2,
-          null,
+          inputRefs.investment,
           incomeSources[1].articleId
         )}
         {renderInputWithRadio(
@@ -558,7 +646,7 @@ function TaxCalculationScreen() {
           "source3Taxed",
           {},
           errors.source3,
-          null,
+          inputRefs.capitalTransfer,
           incomeSources[2].articleId
         )}
         {renderInputWithRadio(
@@ -569,7 +657,7 @@ function TaxCalculationScreen() {
           "source4Taxed",
           {},
           errors.source4,
-          null,
+          inputRefs.royalty,
           incomeSources[3].articleId
         )}
         {renderInputWithRadio(
@@ -580,7 +668,7 @@ function TaxCalculationScreen() {
           "source5Taxed",
           {},
           errors.source5,
-          null,
+          inputRefs.lottery,
           incomeSources[4].articleId
         )}
         {renderInputWithRadio(
@@ -591,7 +679,7 @@ function TaxCalculationScreen() {
           "source6Taxed",
           {},
           errors.source6,
-          null,
+          inputRefs.inheritance,
           incomeSources[5].articleId
         )}
       </div>
@@ -602,7 +690,7 @@ function TaxCalculationScreen() {
             <Accordion.Header>
               <Accordion.Trigger
                 className="calculate-btn"
-              // onClick={handleTaxCalculation}
+                onClick={handleTaxCalculation}
               >
                 Tính thuế
                 <ChevronDownIcon className="chevron" />
@@ -614,15 +702,15 @@ function TaxCalculationScreen() {
                 <div className="result-grid">
                   <div className="result-box">
                     <p className="result-label">Tổng thu nhập</p>
-                    <p className="result-value">0 triệu VNĐ</p>
+                    <p className="result-value">{results.totalIncome} triệu VNĐ</p>
                   </div>
                   <div className="result-box">
                     <p className="result-label">Số thuế phải nộp</p>
-                    <p className="result-value">0 triệu VNĐ</p>
+                    <p className="result-value">{results.taxOwed.business + results.taxOwed.one_time} triệu VNĐ</p>
                   </div>
                   <div className="result-box">
                     <p className="result-label">Số thuế đã nộp</p>
-                    <p className="result-value">0 triệu VNĐ</p>
+                    <p className="result-value">{results.taxPaid.business + results.taxPaid.one_time} triệu VNĐ</p>
                   </div>
                 </div>
               </div>
