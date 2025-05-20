@@ -83,16 +83,16 @@ function TaxCalculationScreen() {
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
         <span className="tooltip-custom">
-          ⓘ <span className="tooltip-text">{tooltip} <br/>
-          {articleId && (
-            <a
-              href={`/sotay/${articleId}`}
-              className='tooltip-link'
-              target='_blank'
-              rel='noopener noreferrer'>
-              Xem thêm
-            </a>
-          )}
+          ⓘ <span className="tooltip-text">{tooltip} <br />
+            {articleId && (
+              <a
+                href={`/sotay/${articleId}`}
+                className='tooltip-link'
+                target='_blank'
+                rel='noopener noreferrer'>
+                Xem thêm
+              </a>
+            )}
           </span>
         </span>
       </div>
@@ -120,16 +120,16 @@ function TaxCalculationScreen() {
       <div className="label-with-tooltip">
         <label className="label" htmlFor={id}>{label}</label>
         <span className="tooltip-custom">
-          ⓘ <span className="tooltip-text">{tooltip} <br/>
-          {articleId && (
-            <a
-              href={`/sotay/${articleId}`}
-              className='tooltip-link'
-              target='_blank'
-              rel='noopener noreferrer'>
-              Xem thêm
-            </a>
-          )}
+          ⓘ <span className="tooltip-text">{tooltip} <br />
+            {articleId && (
+              <a
+                href={`/sotay/${articleId}`}
+                className='tooltip-link'
+                target='_blank'
+                rel='noopener noreferrer'>
+                Xem thêm
+              </a>
+            )}
           </span>
         </span>
       </div>
@@ -168,10 +168,10 @@ function TaxCalculationScreen() {
     <div className="business-income-container">
       <div className="radio-group business-income-type">
         <label className="radio-label">
-          <input 
-            type="radio" 
-            name="businessIncomeType" 
-            value="fixedRate" 
+          <input
+            type="radio"
+            name="businessIncomeType"
+            value="fixedRate"
             checked={businessIncomeType === 'fixedRate'}
             onChange={() => setBusinessIncomeType('fixedRate')}
           />
@@ -180,10 +180,10 @@ function TaxCalculationScreen() {
           </span>
         </label>
         <label className="radio-label">
-          <input 
-            type="radio" 
-            name="businessIncomeType" 
-            value="netIncome" 
+          <input
+            type="radio"
+            name="businessIncomeType"
+            value="netIncome"
             checked={businessIncomeType === 'netIncome'}
             onChange={() => setBusinessIncomeType('netIncome')}
           />
@@ -196,7 +196,7 @@ function TaxCalculationScreen() {
       {businessIncomeType === 'fixedRate' ? (
         <div className="fixed-rate-options">
           <h4 className="sub-heading">Khai báo doanh thu theo ngành nghề</h4>
-          
+
           {renderInput(
             "1. Phân phối, cung cấp hàng hóa (1.5%)",
             "goodsDistribution",
@@ -204,7 +204,7 @@ function TaxCalculationScreen() {
             "Áp dụng thuế suất 1.5% (1% GTGT + 0.5% TNCN)",
             {
               value: fixedRateIncomes.goodsDistribution,
-              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, goodsDistribution: e.target.value})
+              onChange: (e) => setFixedRateIncomes({ ...fixedRateIncomes, goodsDistribution: e.target.value })
             },
             errors.goodsDistribution,
             null,
@@ -218,7 +218,7 @@ function TaxCalculationScreen() {
             "Áp dụng thuế suất 7% (5% GTGT + 2% TNCN)",
             {
               value: fixedRateIncomes.serviceConstruction,
-              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, serviceConstruction: e.target.value})
+              onChange: (e) => setFixedRateIncomes({ ...fixedRateIncomes, serviceConstruction: e.target.value })
             },
             errors.serviceConstruction,
             null,
@@ -232,7 +232,7 @@ function TaxCalculationScreen() {
             "Áp dụng thuế suất 10% (5% GTGT + 5% TNCN)",
             {
               value: fixedRateIncomes.propertyRental,
-              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, propertyRental: e.target.value})
+              onChange: (e) => setFixedRateIncomes({ ...fixedRateIncomes, propertyRental: e.target.value })
             },
             errors.propertyRental,
             null,
@@ -246,7 +246,7 @@ function TaxCalculationScreen() {
             "Áp dụng thuế suất 5% (0% GTGT + 5% TNCN)",
             {
               value: fixedRateIncomes.agencyServices,
-              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, agencyServices: e.target.value})
+              onChange: (e) => setFixedRateIncomes({ ...fixedRateIncomes, agencyServices: e.target.value })
             },
             errors.agencyServices,
             null,
@@ -260,7 +260,7 @@ function TaxCalculationScreen() {
             "Áp dụng thuế suất 4.5% (3% GTGT + 1.5% TNCN)",
             {
               value: fixedRateIncomes.productionTransport,
-              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, productionTransport: e.target.value})
+              onChange: (e) => setFixedRateIncomes({ ...fixedRateIncomes, productionTransport: e.target.value })
             },
             errors.productionTransport,
             null,
@@ -274,7 +274,7 @@ function TaxCalculationScreen() {
             "Áp dụng thuế suất 3% (2% GTGT + 1% TNCN)",
             {
               value: fixedRateIncomes.otherBusiness,
-              onChange: (e) => setFixedRateIncomes({...fixedRateIncomes, otherBusiness: e.target.value})
+              onChange: (e) => setFixedRateIncomes({ ...fixedRateIncomes, otherBusiness: e.target.value })
             },
             errors.otherBusiness,
             null,
@@ -291,7 +291,7 @@ function TaxCalculationScreen() {
             "Tổng doanh thu từ hoạt động kinh doanh",
             {
               value: netIncome.totalRevenue,
-              onChange: (e) => setNetIncome({...netIncome, totalRevenue: e.target.value})
+              onChange: (e) => setNetIncome({ ...netIncome, totalRevenue: e.target.value })
             },
             errors.totalRevenue,
             null,
@@ -305,7 +305,7 @@ function TaxCalculationScreen() {
             "Các chi phí hợp lệ được trừ khi tính thuế",
             {
               value: netIncome.deductibleCost,
-              onChange: (e) => setNetIncome({...netIncome, deductibleCost: e.target.value})
+              onChange: (e) => setNetIncome({ ...netIncome, deductibleCost: e.target.value })
             },
             errors.deductibleCost,
             null,
@@ -363,7 +363,7 @@ function TaxCalculationScreen() {
               paymentDate: value,
               dueDate: value ?
                 new Date(new Date(value).getTime() + 10 * 24 * 60 * 60 * 1000)
-                .toISOString().split('T')[0]
+                  .toISOString().split('T')[0]
                 : ''
             }));
           }
@@ -577,7 +577,10 @@ function TaxCalculationScreen() {
         <Accordion.Root type="single" collapsible className="accordion-root">
           <Accordion.Item value="taxResult">
             <Accordion.Header>
-              <Accordion.Trigger className="calculate-btn">
+              <Accordion.Trigger
+                className="calculate-btn"
+              // onClick={handleTaxCalculation}
+              >
                 Tính thuế
                 <ChevronDownIcon className="chevron" />
               </Accordion.Trigger>
