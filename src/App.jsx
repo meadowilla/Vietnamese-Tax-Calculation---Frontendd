@@ -54,9 +54,13 @@ function App() {
               path='tinhthuethang' 
               element={<TaxCalculationScreen />} 
             />
-            <Route
+            {/*<Route
               path="user/luutru"
               element={user ? <UserStorageScreen /> : <Navigate to="/account/signin" replace /> }
+            />*/}
+            <Route
+              path="user/luutru"
+              element={<UserStorageScreen />}
             />
             <Route
               path="lienhe"
