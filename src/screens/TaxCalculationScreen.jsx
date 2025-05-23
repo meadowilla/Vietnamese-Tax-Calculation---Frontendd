@@ -4,6 +4,7 @@ import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 
 function TaxCalculationScreen() {
+  const user = useSelector(userSelector);
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
   const [formData, setFormData] = useState({
     paymentDate: '',
@@ -362,57 +363,60 @@ function TaxCalculationScreen() {
   const toFloat = (value) => parseFloat(parseFloat(value || '0').toFixed(2));
   const handleTaxCalculation = async () => {
     const payload = {
-    // Thuế thu nhập
-    month: parseInt(inputRefs.month.current?.value || '1', 10),
-    year: parseInt(inputRefs.year.current?.value || '2025', 10),
+      // uid
+      uid: user.id,
+    
+      // Thuế thu nhập
+      month: parseInt(inputRefs.month.current?.value || '1', 10),
+      year: parseInt(inputRefs.year.current?.value || '2025', 10),
 
-    // Thông tin người dùng
-    residency: (document.querySelector('input[name="residency"]:checked')?.value === 'resident'),
-    dependents: toFloat(inputRefs.dependents.current?.value),
-    region: parseInt(document.querySelector('select[name="region"]').value || '0', 10),
+      // Thông tin người dùng
+      residency: (document.querySelector('input[name="residency"]:checked')?.value === 'resident'),
+      dependents: toFloat(inputRefs.dependents.current?.value),
+      region: parseInt(document.querySelector('select[name="region"]').value || '0', 10),
 
-    // Thu nhập tính thuế theo biểu thuế lũy tiến từng phần
-    income_labor_contract: toFloat(inputRefs.longTermIncome.current?.value),
-    taxed_labor_contract: (document.querySelector('input[name="longTermTaxed"]:checked')?.value === 'yes'),
-    income_no_contract: toFloat(inputRefs.shortTermIncome.current?.value),
-    taxed_no_contract: (document.querySelector('input[name="shortTermIncome"]:checked')?.value === 'yes'),
-    income_foreign_contract: toFloat(inputRefs.foreignIncome.current?.value),
-    deducted_tax_abroad: toFloat(inputRefs.deductedTax.current?.value),
+      // Thu nhập tính thuế theo biểu thuế lũy tiến từng phần
+      income_labor_contract: toFloat(inputRefs.longTermIncome.current?.value),
+      taxed_labor_contract: (document.querySelector('input[name="longTermTaxed"]:checked')?.value === 'yes'),
+      income_no_contract: toFloat(inputRefs.shortTermIncome.current?.value),
+      taxed_no_contract: (document.querySelector('input[name="shortTermIncome"]:checked')?.value === 'yes'),
+      income_foreign_contract: toFloat(inputRefs.foreignIncome.current?.value),
+      deducted_tax_abroad: toFloat(inputRefs.deductedTax.current?.value),
 
-    // Thu nhập từ kinh doanh
-    use_flat_rate: (businessIncomeType === 'fixedRate'),
-    business_income_flat: {
-      distribution: toFloat(fixedRateIncomes.goodsDistribution),
-      service: toFloat(fixedRateIncomes.serviceConstruction),
-      rent: toFloat(fixedRateIncomes.propertyRental),
-      agent: toFloat(fixedRateIncomes.agencyServices),
-      production: toFloat(fixedRateIncomes.productionTransport),
-      others: toFloat(fixedRateIncomes.otherBusiness),
-    },
-    net_income: {
-      total_revenue: toFloat(netIncome.totalRevenue),
-      deductible_cost: toFloat(netIncome.deductibleCost),
-    },
+      // Thu nhập từ kinh doanh
+      use_flat_rate: (businessIncomeType === 'fixedRate'),
+      business_income_flat: {
+        distribution: toFloat(fixedRateIncomes.goodsDistribution),
+        service: toFloat(fixedRateIncomes.serviceConstruction),
+        rent: toFloat(fixedRateIncomes.propertyRental),
+        agent: toFloat(fixedRateIncomes.agencyServices),
+        production: toFloat(fixedRateIncomes.productionTransport),
+        others: toFloat(fixedRateIncomes.otherBusiness),
+      },
+      net_income: {
+        total_revenue: toFloat(netIncome.totalRevenue),
+        deductible_cost: toFloat(netIncome.deductibleCost),
+      },
 
-    // Thu nhập chịu thuế theo từng lần phát sinh
-    payment_date: inputRefs.paymentDate.current?.value || '',
-    once_off_income: {
-      real_estate: toFloat(inputRefs.realEstate.current?.value),
-      investment: toFloat(inputRefs.investment.current?.value),
-      capital_transfer: toFloat(inputRefs.capitalTransfer.current?.value),
-      royalty: toFloat(inputRefs.royalty.current?.value),
-      lottery: toFloat(inputRefs.lottery.current?.value),
-      inheritance: toFloat(inputRefs.inheritance.current?.value),
-    },
-    taxed_once_off: {
-      real_estate: (document.querySelector('input[name="source1Taxed"]:checked')?.value === 'yes'),
-      investment: (document.querySelector('input[name="source2Taxed"]:checked')?.value === 'yes'),
-      capital_transfer: (document.querySelector('input[name="source3Taxed"]:checked')?.value === 'yes'),
-      royalty: (document.querySelector('input[name="source4Taxed"]:checked')?.value === 'yes'),
-      lottery: (document.querySelector('input[name="source5Taxed"]:checked')?.value === 'yes'),
-      inheritance: (document.querySelector('input[name="source6Taxed"]:checked')?.value === 'yes'),
-    },
-  };
+      // Thu nhập chịu thuế theo từng lần phát sinh
+      payment_date: inputRefs.paymentDate.current?.value || '',
+      once_off_income: {
+        real_estate: toFloat(inputRefs.realEstate.current?.value),
+        investment: toFloat(inputRefs.investment.current?.value),
+        capital_transfer: toFloat(inputRefs.capitalTransfer.current?.value),
+        royalty: toFloat(inputRefs.royalty.current?.value),
+        lottery: toFloat(inputRefs.lottery.current?.value),
+        inheritance: toFloat(inputRefs.inheritance.current?.value),
+      },
+      taxed_once_off: {
+        real_estate: (document.querySelector('input[name="source1Taxed"]:checked')?.value === 'yes'),
+        investment: (document.querySelector('input[name="source2Taxed"]:checked')?.value === 'yes'),
+        capital_transfer: (document.querySelector('input[name="source3Taxed"]:checked')?.value === 'yes'),
+        royalty: (document.querySelector('input[name="source4Taxed"]:checked')?.value === 'yes'),
+        lottery: (document.querySelector('input[name="source5Taxed"]:checked')?.value === 'yes'),
+        inheritance: (document.querySelector('input[name="source6Taxed"]:checked')?.value === 'yes'),
+      },
+    };
     console.log("payload:", payload);
 
     try {
