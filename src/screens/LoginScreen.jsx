@@ -42,11 +42,16 @@ function LoginScreen() {
       fetch('http://localhost:3000/auth/login/', req)
         .then(response => response.json())
         .then(res => {
-          if (res.status === 200) {
+          if (res.success) {
             console.log('User logged in successfully:', res);
           } else {
+            console.log('Error logging in user:', res);
             throw new Error("Invalid email or password");
           }
+
+          // Store the token in userSlice
+          
+
         })
         .catch((error) => {
           console.error('Error:', error);

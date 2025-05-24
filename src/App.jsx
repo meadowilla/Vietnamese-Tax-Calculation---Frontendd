@@ -30,14 +30,6 @@ function App() {
 
   return (
     <>
-      <div>
-        {/*<h1>Lists of registered users:</h1>*/}
-        <ol>
-          {users.map((user, index) => (
-            <li key={index}>{user}</li>
-          ))}
-        </ol>
-      </div>
       <Router>
         <Routes>
           {/* Nesting routes inside Layout so they share Header, Footer, and Outlet */}

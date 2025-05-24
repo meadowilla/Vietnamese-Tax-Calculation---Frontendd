@@ -47,10 +47,11 @@ function SignupForm() {
       await fetch('http://localhost:3000/auth/signup/', req)
         .then(response => response.json())
         .then(res => {
-          if (res.status === 200) {
+          if (res.success) {
             console.log('User created successfully:', res);
           } else {
-            throw new Error("User already exists");
+            console.log('Error creating user:', res);
+            // throw new Error("User already exists");
           }
         })
         .catch((error) => {
