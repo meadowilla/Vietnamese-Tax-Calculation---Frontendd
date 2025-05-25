@@ -10,12 +10,14 @@ import ContactScreen from './screens/ContactScreen';
 import ForgotPassword from './screens/ForgotPassword';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { selectUser } from './redux/UserSlice';
+import { selectUser, login, selectIsAuthLoading } from './redux/UserSlice';
 import './App.css';
+import Spinner from './screens/Spinner';
 
 
 function App() {
   const user = useSelector(selectUser);
+  const isAuthLoading = useSelector(selectIsAuthLoading);
   console.log('User in App:', user);
   const dispatch = useDispatch();
   
@@ -63,7 +65,13 @@ function App() {
             {/* Route for auth user */}
             <Route
               path="user/luutru"
-              element={user ? <UserStorageScreen /> : <Navigate to="/account/signin" replace />}
+              element={
+                !isAuthLoading
+                ? user 
+                  ? <UserStorageScreen /> 
+                  : <Navigate to="/account/signin" replace />
+                : <Spinner />
+              }
               />
 
             {/* Auth routes */}

@@ -85,7 +85,7 @@ function Header() {
         </div>
         ) : (
           <div className="mobile-menu-bottom">
-            <Link to="/account/signin" className="btn btn-dark">Đăng xuất</Link>
+            <Link to="/" onClick={handleLogout} className="btn btn-dark">Đăng xuất</Link>
           </div>
         )}
       </div>
