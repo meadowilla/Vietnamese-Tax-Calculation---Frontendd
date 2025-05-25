@@ -45,19 +45,13 @@ function LoginScreen() {
         body: JSON.stringify({ email, password }),
       });
 
-      const result = await response.json();
+      const res = await response.json();
 
-      if (result.success) {
-        console.log('User logged in successfully:', result);
+      if (res.success) {
+        console.log('User logged in successfully:', res);
         
         // Dispatch login action
         dispatch(login({
-          accessToken: result.accessToken,
-          userId: result.userId,
-        }));
-
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify({
           accessToken: res.accessToken,
           userId: res.userId,
         }));
