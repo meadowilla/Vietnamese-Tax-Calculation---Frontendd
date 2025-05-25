@@ -21,7 +21,7 @@ function Header() {
   }, []);
 
   return (
-    <header>
+    <header className='header'>
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand">
