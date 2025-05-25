@@ -10,14 +10,14 @@ import ContactScreen from './screens/ContactScreen';
 import ForgotPassword from './screens/ForgotPassword';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { selectUser, login, selectIsAuthLoading } from './redux/UserSlice';
+import { selectUser, login} from './redux/UserSlice';
 import './App.css';
+import ProtectedRoute from './ProtectedRoute';
 import Spinner from './screens/Spinner';
 
 
 function App() {
   const user = useSelector(selectUser);
-  const isAuthLoading = useSelector(selectIsAuthLoading);
   console.log('User in App:', user);
   const dispatch = useDispatch();
   
@@ -39,6 +39,11 @@ function App() {
     <>
       <Router>
         <Routes>
+          <Route
+              path="spinner" 
+              element={<Spinner />}
+          />
+
           {/* Public routes*/}
           <Route path="/" element={<Layout />}>
             <Route 
@@ -66,22 +71,20 @@ function App() {
             <Route
               path="user/luutru"
               element={
-                !isAuthLoading
-                ? user 
-                  ? <UserStorageScreen /> 
-                  : <Navigate to="/account/signin" replace />
-                : <Spinner />
+                <ProtectedRoute >
+                  <UserStorageScreen />
+                </ProtectedRoute>
               }
-              />
+            />
 
             {/* Auth routes */}
             <Route
               path="account/signin"
-              element={user ? <Navigate to="/" replace /> : <LoginScreen />}
+              element={user ? <Navigate to="/user/luutru" replace /> : <LoginScreen />}
             />
             <Route
               path="account/create"
-              element={user ? <Navigate to="/" replace /> : <SignupScreen />}
+              element={user ? <Navigate to="/user/luutru" replace /> : <SignupScreen />}
             />
             <Route
               path="account/forgot-password"
