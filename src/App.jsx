@@ -14,6 +14,7 @@ import { selectUser, login} from './redux/UserSlice';
 import './App.css';
 import ProtectedRoute from './ProtectedRoute';
 import Spinner from './screens/Spinner';
+import ChatBot from './screens/ChatBot';
 
 
 function App() {
@@ -92,6 +93,7 @@ function App() {
               />
             </Route>
         </Routes>
+        <ChatBot />
       </Router>
     </>
   );
