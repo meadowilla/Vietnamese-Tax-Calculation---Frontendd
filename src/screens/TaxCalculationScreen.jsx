@@ -4,7 +4,7 @@ import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 
 function TaxCalculationScreen() {
-  const user = useSelector(userSelector);
+  const user = null; // Biến user cần updateupdate khi người dùng đăng nhậpnhập
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
   const [formData, setFormData] = useState({
     paymentDate: '',
