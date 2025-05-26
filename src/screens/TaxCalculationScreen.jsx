@@ -454,8 +454,8 @@ function TaxCalculationScreen() {
 
       setResults({
         totalIncome: result.data.total_income,
-        taxOwed: result.data.tax_need_to_pay,
-        taxPaid: result.data.tax_paid
+        taxOwed: result.data.summary.tax_need_to_pay,
+        taxPaid: result.data.summary.tax_paid
       });
     } catch (error) {
       console.error('Lỗi khi gửi dữ liệu:', error);

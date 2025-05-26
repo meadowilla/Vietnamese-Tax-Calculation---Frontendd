@@ -34,111 +34,165 @@ function UserStorageScreen() {
       
       if (res.success) {
         const data = res.data;
+        console.log('Fetched tax records:', data);
+        let records = [];
+        for (let record of data) {
+          let salaryIncomes = [];
+          let businessIncomes = [];
+          let otherIncomes = [];
 
-        let records = data.map(record => ({
-          id: record._id,
-          month: record.input.month,
-          year: record.input.year,
-          totalIncome: record.output.total_income,
-          taxDue: record.output.tax_need_to_pay.business + record.output.tax_need_to_pay.one_time,
-          taxPaid: record.output.tax_paid.business + record.output.tax_paid.one_time,
-          salaryIncomes: [
-            { 
-              name: 'HĐLĐ >3 tháng', 
-              amount: record.input.income_labor_contract, 
-              taxDue: 0.375, 
-              taxPaid: 0.375 
-            },
-            { 
-              name: 'HĐLĐ <3 tháng / Không có HĐLĐ', 
-              amount: record.input.income_no_contract, 
-              taxDue: 0.375, 
-              taxPaid: 0.375 
-            },
-            { 
-              name: 'HĐLĐ nước ngoài', 
-              amount: record.input.income_foreign_contract, 
-              taxDue: 0.375, 
-              taxPaid: 0.375 
-            }
-          ],
-          businessIncomes: [
-            { 
-              name: 'Phân phối hàng hóa', 
-              amount: record.input.business_income_flat.distribution, 
-              taxDue: 0.375, 
-              taxPaid: 0.375 
-            },
-            { 
-              name: 'Dịch vụ xây dựng', 
-              amount: record.input.business_income_flat.service, 
-              taxDue: 1.26, 
-              taxPaid: 1 
-            },
-            { 
-              name: 'Cho thuê tài sản', 
-              amount: record.input.business_income_flat.rent, 
-              taxDue: 1.2, 
-              taxPaid: 0.6 
-            },
-            { 
-              name: 'Đại lý xổ số, bảo hiểm, bán hàng đa cấp', 
-              amount: record.input.business_income_flat.agent, 
-              taxDue: 1.2, 
-              taxPaid: 0.6 
-            },
-            { 
-              name: 'Dịch vụ hàng hóa', 
-              amount: record.input.business_income_flat.production, 
-              taxDue: 1.2, 
-              taxPaid: 0.6 
-            },
-            { 
-              name: 'Kinh doanh khác', 
-              amount: record.input.business_income_flat.others, 
-              taxDue: 1.2, 
-              taxPaid: 0.6 
-            }
-          ],
-          otherIncomes: [
-            { 
-              name: 'Chuyển nhượng BĐS', 
-              amount: record.input.once_off_income.real_estate, 
-              taxDue: 0.3, 
-              taxPaid: 0.3 
-            },
-            { 
-              name: 'Đầu tư vốn', 
-              amount: record.input.once_off_income.investment, 
-              taxDue: 0.5, 
-              taxPaid: 0.5 
-            },
-            { 
-              name: 'Chuyển nhượng vốn', 
-              amount: record.input.once_off_income.capital_transfer, 
-              taxDue: 0.5, 
-              taxPaid: 0.5 
-            },
-            { 
-              name: 'Bản quyền, nhượng quyền thương mại', 
-              amount: record.input.once_off_income.royalty, 
-              taxDue: 0.5, 
-              taxPaid: 0.5 
-            },
-            { 
-              name: 'Trúng thưởng', 
-              amount: record.input.once_off_income.lottery, 
-              taxDue: 0.2, 
-              taxPaid: 0.2 
-            },
-            { 
-              name: 'Thừa kế, quà tặng', 
-              amount: record.input.once_off_income.inheritance, 
-              taxDue: 0.2, 
-              taxPaid: 0.2 
-            },
-          ]
-        }));
+          let income_labor_contract = record.output.business_income.income_labor_contract;
+          if (income_labor_contract.amount != 0) {
+            salaryIncomes.push({
+              name: 'HĐLĐ >3 tháng',
+              amount: income_labor_contract.amount,
+              taxDue: income_labor_contract.tax_due,
+              taxPaid: income_labor_contract.tax_paid
+            });
+          }
+          let income_no_contract = record.output.business_income.income_no_contract;
+          if (income_no_contract.amount != 0) {
+            salaryIncomes.push({
+              name: 'HĐLĐ <3 tháng / Không có HĐLĐ',
+              amount: income_no_contract.amount,
+              taxDue: income_no_contract.tax_due,
+              taxPaid: income_no_contract.tax_paid
+            });
+          }
+          let income_foreign_contract = record.output.business_income.income_foreign_contract;
+          if (income_foreign_contract.amount != 0) {
+            salaryIncomes.push({
+              name: 'HĐLĐ nước ngoài',
+              amount: income_foreign_contract.amount,
+              taxDue: income_foreign_contract.tax_due,
+              taxPaid: income_foreign_contract.tax_paid
+            });
+          }
+          let business_distribution = record.output.business_income.business_distribution;
+          if (business_distribution.amount != 0) {
+            businessIncomes.push({
+              name: 'Phân phối hàng hóa',
+              amount: business_distribution.amount,
+              taxDue: business_distribution.tax_due,
+              taxPaid: business_distribution.tax_paid
+            });
+          }
+          let business_service = record.output.business_income.business_service;
+          if (business_service.amount != 0) {
+            businessIncomes.push({
+              name: 'Dịch vụ xây dựng',
+              amount: business_service.amount,
+              taxDue: business_service.tax_due,
+              taxPaid: business_service.tax_paid
+            });
+          }
+          let business_rent = record.output.business_income.business_rent;
+          if (business_rent.amount != 0) {
+            businessIncomes.push({
+              name: 'Cho thuê tài sản',
+              amount: business_rent.amount,
+              taxDue: business_rent.tax_due,
+              taxPaid: business_rent.tax_paid
+            });
+          }
+          let business_agent = record.output.business_income.business_agent;
+          if (business_agent.amount != 0) {
+            businessIncomes.push({
+              name: 'Đại lý xổ số, bảo hiểm, bán hàng đa cấp',
+              amount: business_agent.amount,
+              taxDue: business_agent.tax_due,
+              taxPaid: business_agent.tax_paid
+            });
+          }
+          let business_others = record.output.business_income.business_others;
+          if (business_others.amount != 0) {
+            businessIncomes.push({
+              name: 'Kinh doanh khác',
+              amount: business_others.amount,
+              taxDue: business_others.tax_due,
+              taxPaid: business_others.tax_paid
+            });
+          }
+          let business_production = record.output.business_income.business_production;
+          if (business_production.amount != 0) {
+            businessIncomes.push({
+              name: 'Dịch vụ hàng hóa',
+              amount: business_production.amount,
+              taxDue: business_production.tax_due,
+              taxPaid: business_production.tax_paid
+            });
+          }
+
+          let real_estate = record.output.once_off_income.real_estate;
+          if (real_estate.amount != 0) {
+            otherIncomes.push({
+              name: 'Chuyển nhượng BĐS',
+              amount: real_estate.amount,
+              taxDue: real_estate.tax_due,
+              taxPaid: real_estate.tax_paid
+            });
+          }
+          let investment = record.output.once_off_income.investment;
+          if (investment.amount != 0) {
+            otherIncomes.push({
+              name: 'Đầu tư vốn',
+              amount: investment.amount,
+              taxDue: investment.tax_due,
+              taxPaid: investment.tax_paid
+            });
+          }
+          let capital_transfer = record.output.once_off_income.capital_transfer;
+          if (capital_transfer.amount != 0) {
+            otherIncomes.push({
+              name: 'Chuyển nhượng vốn',
+              amount: capital_transfer.amount,
+              taxDue: capital_transfer.tax_due,
+              taxPaid: capital_transfer.tax_paid
+            });
+          }
+          let royalty = record.output.once_off_income.royalty;
+          if (royalty.amount != 0) {
+            otherIncomes.push({
+              name: 'Bản quyền, nhượng quyền thương mại',
+              amount: royalty.amount,
+              taxDue: royalty.tax_due,
+              taxPaid: royalty.tax_paid
+            });
+          }
+          let lottery = record.output.once_off_income.lottery;
+          if (lottery.amount != 0) {
+            otherIncomes.push({
+              name: 'Trúng thưởng',
+              amount: lottery.amount,
+              taxDue: lottery.tax_due,
+              taxPaid: lottery.tax_paid
+            });
+          }
+          let inheritance = record.output.once_off_income.inheritance;
+          if (inheritance.amount != 0) {
+            otherIncomes.push({
+              name: 'Thừa kế, quà tặng',
+              amount: inheritance.amount,
+              taxDue: inheritance.tax_due,
+              taxPaid: inheritance.tax_paid
+            });
+          }
+
+          // Tạo đối tượng record với các thông tin cần thiết
+          records.push({
+            id: record._id,
+            month: record.input.month,
+            year: record.input.year,
+            totalIncome: record.output.total_income,
+            taxDue: record.output.summary.tax_need_to_pay.business + record.output.summary.tax_need_to_pay.one_time,
+            taxPaid: record.output.summary.tax_paid.business + record.output.summary.tax_paid.one_time,
+            salaryIncomes: salaryIncomes,
+            businessIncomes: businessIncomes,
+            otherIncomes: otherIncomes
+          })
+        }
+
+        console.log('Prepared tax records:', records);
         
         setTaxRecords(records);
       } else {
