@@ -101,3 +101,7 @@
 .packet-card button:hover {
   background-color: #00754a;
 }
+
+.package-selection {
+  margin-bottom: 30px;
+}

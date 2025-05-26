@@ -1,8 +1,17 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout, selectUser } from '../redux/UserSlice';
 
 function Header() {
+  const user = useSelector(selectUser);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    dispatch(logout());
+  };
+
   useEffect(() => {
     const btn = document.getElementById('menu-btn');
     const nav = document.getElementById('menu');
@@ -21,7 +30,7 @@ function Header() {
   }, []);
 
   return (
-    <header>
+    <header className='header'>
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-brand">
@@ -36,15 +45,21 @@ function Header() {
             <li><Link to="/user/luutru">Lưu trữ</Link></li>
             <li><Link to="/lienhe">Liên hệ</Link></li>
           </ul>
-
-          <ul className="navbar-nav-right">
-            <li>
-              <Link to="/account/signin" className="btn ">Đăng nhập</Link>
-            </li>
-            <li>
-              <Link to="/account/create" className="btn btn-dark">Đăng ký</Link>
-            </li>
-          </ul>
+          {!user 
+            ? <ul className="navbar-nav-right">
+              <li>
+                <Link to="/account/signin" className="btn ">Đăng nhập</Link>
+              </li>
+              <li>
+                <Link to="/account/create" className="btn btn-dark">Đăng ký</Link>
+              </li>
+            </ul>
+            : <ul className="navbar-nav-right">
+              <li>
+                <Link to="/" onClick={handleLogout} className="btn btn-dark">Đăng xuất</Link>
+              </li>
+            </ul>
+          }
 
           {/* Hamburger Menu */}
           <button type="button" className="hamburger" id="menu-btn">
@@ -63,11 +78,16 @@ function Header() {
           <li><Link to="/user/luutru">Lưu trữ</Link></li>
           <li><Link to="/lienhe">Liên hệ</Link></li>
         </ul>
-
-        <div className="mobile-menu-bottom">
-          <Link to="/account/signin" className="btn btn-dark-outline">Sign in</Link>
-          <Link to="/account/create" className="btn btn-dark">Sign up</Link>
+        {!user ? (
+          <div className="mobile-menu-bottom">
+          <Link to="/account/signin" className="btn btn-dark-outline">Đăng nhập</Link>
+          <Link to="/account/create" className="btn btn-dark">Đăng ký</Link>
         </div>
+        ) : (
+          <div className="mobile-menu-bottom">
+            <Link to="/" onClick={handleLogout} className="btn btn-dark">Đăng xuất</Link>
+          </div>
+        )}
       </div>
     </header>
   );

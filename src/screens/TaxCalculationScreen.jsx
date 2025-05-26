@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react';
 import "./TaxCalculationScreen.css";
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../redux/UserSlice';
 
 function TaxCalculationScreen() {
-  const user = useSelector(userSelector);
+  const user = useSelector(selectUser);
   const [hasDeductedTax, setHasDeductedTax] = useState(false);
   const [formData, setFormData] = useState({
     paymentDate: '',
@@ -72,8 +74,14 @@ function TaxCalculationScreen() {
 
   const [results, setResults] = useState({
     totalIncome: 0,
-    taxOwed: 0,
-    taxPaid: 0
+    taxOwed: {
+      business: 0,
+      one_time: 0
+    },
+    taxPaid: {
+      business: 0,
+      one_time: 0
+    }
   });
 
   const validateInput = (value, type, inputType) => {
@@ -364,7 +372,7 @@ function TaxCalculationScreen() {
   const handleTaxCalculation = async () => {
     const payload = {
       // uid
-      uid: user.id,
+      uid: user?.userId,
     
       // Thuế thu nhập
       month: parseInt(inputRefs.month.current?.value || '1', 10),
@@ -419,22 +427,36 @@ function TaxCalculationScreen() {
     };
     console.log("payload:", payload);
 
+    const uri = user ? 'http://127.0.0.1:3000/tax/calculate-tax-auth' : 'http://http://127.0.0.1:3000/tax/calculate-tax';
+    console.log("uri:", uri);
+    
+    const headers = user.accessToken 
+    ? {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.accessToken}`
+      }
+    : {
+        'Content-Type': 'application/json'
+      };
+
+    console.log("headers:", headers);
+
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/calculate-tax', {
+      const response = await fetch(uri, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: JSON.stringify(payload)
       });
+      console.log("response:", response);
 
       const result = await response.json();
-      setResults({
-        totalIncome: result.total_income,
-        taxOwed: result.tax_need_to_pay,
-        taxPaid: result.tax_paid
-      });
       console.log("result:", result);
+
+      setResults({
+        totalIncome: result.data.total_income,
+        taxOwed: result.data.tax_need_to_pay,
+        taxPaid: result.data.tax_paid
+      });
     } catch (error) {
       console.error('Lỗi khi gửi dữ liệu:', error);
     }

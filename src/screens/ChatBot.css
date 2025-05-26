@@ -1,0 +1,88 @@
+.chatbot-wrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Tooltip tin nhắn nhỏ */
+.chat-tooltip {
+  background-color: #00653e;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  animation: fadeInRight 1s ease forwards;
+  white-space: nowrap;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* Icon Chatbot nhún nhảy */
+.chatbot-button {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.chatbot-button img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: bounce 2s infinite;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+/* Chatbox popup */
+.chatbox {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  z-index: 999;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  background: #00653e;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.chat-body {
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Nhún nhảy */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Tooltip xuất hiện mượt */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

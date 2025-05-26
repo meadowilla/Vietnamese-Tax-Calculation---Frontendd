@@ -8,39 +8,44 @@ import TaxCalculationScreen from './screens/TaxCalculationScreen';
 import UserStorageScreen from './screens/UserStorageScreen';
 import ContactScreen from './screens/ContactScreen';
 import ForgotPassword from './screens/ForgotPassword';
-import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { selectUser, login} from './redux/UserSlice';
 import './App.css';
+import ProtectedRoute from './ProtectedRoute';
+import Spinner from './screens/Spinner';
+import ChatBot from './screens/ChatBot';
 
 
 function App() {
-  const user = null;
-  const [users, setUsers] = useState([]);
-
+  const user = useSelector(selectUser);
+  console.log('User in App:', user);
+  const dispatch = useDispatch();
+  
   useEffect(() => {
-    fetch("http://localhost:3000/auth")
-    .then(res => res.json())
-    .then(res => {
-      const usernames = res.data.map(user => user.username);
-      setUsers(usernames);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }, []);
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser.accessToken && parsedUser.userId) {
+          dispatch(login(parsedUser));
+        }
+      } catch (err) {
+        console.error("Failed to parse user from localStorage", err);
+      }
+    }
+  }, [dispatch]);
 
   return (
     <>
-      <div>
-        {/*<h1>Lists of registered users:</h1>*/}
-        <ol>
-          {users.map((user, index) => (
-            <li key={index}>{user}</li>
-          ))}
-        </ol>
-      </div>
       <Router>
         <Routes>
-          {/* Nesting routes inside Layout so they share Header, Footer, and Outlet */}
+          <Route
+              path="spinner" 
+              element={<Spinner />}
+          />
+
+          {/* Public routes*/}
           <Route path="/" element={<Layout />}>
             <Route 
               index 
@@ -54,37 +59,41 @@ function App() {
               path='tinhthuethang' 
               element={<TaxCalculationScreen />} 
             />
-            {/*<Route
-              path="user/luutru"
-              element={user ? <UserStorageScreen /> : <Navigate to="/account/signin" replace /> }
-            />*/}
-            <Route
-              path="user/luutru"
-              element={<UserStorageScreen />}
-            />
             <Route
               path="lienhe"
               element={<ContactScreen />}
             />
             <Route
+              path='sotay/:id'
+              element={<NotebookScreen />}
+            />
+
+            {/* Route for auth user */}
+            <Route
+              path="user/luutru"
+              element={
+                <ProtectedRoute >
+                  <UserStorageScreen />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Auth routes */}
+            <Route
               path="account/signin"
-              element={user ? <Navigate to="/sotay" replace /> : <LoginScreen />}
+              element={user ? <Navigate to="/user/luutru" replace /> : <LoginScreen />}
             />
             <Route
               path="account/create"
-              element={user ? <Navigate to="/sotay" replace /> : <SignupScreen />}
+              element={user ? <Navigate to="/user/luutru" replace /> : <SignupScreen />}
             />
             <Route
               path="account/forgot-password"
               element={<ForgotPassword />}
-            />
-
-            <Route
-            path='sotay/:id'
-            element={<NotebookScreen />}
-            />
-          </Route>
+              />
+            </Route>
         </Routes>
+        <ChatBot />
       </Router>
     </>
   );

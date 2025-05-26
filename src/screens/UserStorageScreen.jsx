@@ -1,83 +1,159 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../redux/UserSlice';
+import { useEffect } from 'react';
 import "./UserStorageScreen.css";
 
 function UserStorageScreen() {
+  const user = useSelector(selectUser);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [selectedYearRecord, setSelectedYearRecord] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [showYearPopup, setShowYearPopup] = useState(false);
-  const [selectedYear, setSelectedYear] = useState('2025');
-
-  // Dữ liệu mẫu chi tiết
-  const [taxRecords, setTaxRecords] = useState([
-    {
-      id: 1,
-      month: '05',
-      year: '2025',
-      totalIncome: 220,
-      taxDue: 22,
-      taxPaid: 18,
-      salaryIncomes: [
-        { name: 'Hợp đồng >3 tháng', amount: 100, taxDue: 5, taxPaid: 4 },
-        { name: 'Hợp đồng <3 tháng', amount: 50, taxDue: 5, taxPaid: 5 },
-        { name: 'Nước ngoài', amount: 30, taxDue: 1.5, taxPaid: 1 }
-      ],
-      businessIncomes: [
-        { name: 'Phân phối hàng hóa', amount: 20, taxDue: 0.3, taxPaid: 0.3 },
-        { name: 'Dịch vụ xây dựng', amount: 15, taxDue: 1.05, taxPaid: 0.8 },
-        { name: 'Cho thuê tài sản', amount: 10, taxDue: 1, taxPaid: 0.5 }
-      ],
-      otherIncomes: [
-        { name: 'Chuyển nhượng BĐS', amount: 10, taxDue: 0.2, taxPaid: 0.2 },
-        { name: 'Đầu tư vốn', amount: 5, taxDue: 0.25, taxPaid: 0.25 }
-      ]
-    },
-    {
-      id: 2,
-      month: '06',
-      year: '2025',
-      totalIncome: 250,
-      taxDue: 25,
-      taxPaid: 20,
-      salaryIncomes: [
-        { name: 'Hợp đồng >3 tháng', amount: 120, taxDue: 6, taxPaid: 5 },
-        { name: 'Hợp đồng <3 tháng', amount: 60, taxDue: 6, taxPaid: 6 },
-        { name: 'Nước ngoài', amount: 35, taxDue: 1.75, taxPaid: 1.2 }
-      ],
-      businessIncomes: [
-        { name: 'Phân phối hàng hóa', amount: 25, taxDue: 0.375, taxPaid: 0.375 },
-        { name: 'Dịch vụ xây dựng', amount: 18, taxDue: 1.26, taxPaid: 1 },
-        { name: 'Cho thuê tài sản', amount: 12, taxDue: 1.2, taxPaid: 0.6 }
-      ],
-      otherIncomes: [
-        { name: 'Chuyển nhượng BĐS', amount: 12, taxDue: 0.24, taxPaid: 0.24 },
-        { name: 'Đầu tư vốn', amount: 8, taxDue: 0.4, taxPaid: 0.4 }
-      ]
-    },
-    {
-      id: 3,
-      month: '07',
-      year: '2025',
-      totalIncome: 280,
-      taxDue: 28,
-      taxPaid: 23,
-      salaryIncomes: [
-        { name: 'Hợp đồng >3 tháng', amount: 130, taxDue: 6.5, taxPaid: 5.5 },
-        { name: 'Hợp đồng <3 tháng', amount: 70, taxDue: 7, taxPaid: 7 },
-        { name: 'Nước ngoài', amount: 40, taxDue: 2, taxPaid: 1.5 }
-      ],
-      businessIncomes: [
-        { name: 'Phân phối hàng hóa', amount: 30, taxDue: 0.45, taxPaid: 0.45 },
-        { name: 'Dịch vụ xây dựng', amount: 20, taxDue: 1.4, taxPaid: 1.1 },
-        { name: 'Cho thuê tài sản', amount: 15, taxDue: 1.5, taxPaid: 0.75 }
-      ],
-      otherIncomes: [
-        { name: 'Chuyển nhượng BĐS', amount: 15, taxDue: 0.3, taxPaid: 0.3 },
-        { name: 'Đầu tư vốn', amount: 10, taxDue: 0.5, taxPaid: 0.5 }
-      ]
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Mặc định là năm hiện tại
+  const [taxRecords, setTaxRecords] = useState([]);
+  
+  useEffect(() => {
+    if(user?.accessToken && user?.userId) {
+      fetchTaxRecords();
     }
-  ]);
+  }, [user]);
+
+  const fetchTaxRecords = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/tax/storage/?userId=${user.userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      });
+
+      const res = await response.json();
+      
+      if (res.success) {
+        const data = res.data;
+
+        let records = data.map(record => ({
+          id: record._id,
+          month: record.input.month,
+          year: record.input.year,
+          totalIncome: record.output.total_income,
+          taxDue: record.output.tax_need_to_pay.business + record.output.tax_need_to_pay.one_time,
+          taxPaid: record.output.tax_paid.business + record.output.tax_paid.one_time,
+          salaryIncomes: [
+            { 
+              name: 'HĐLĐ >3 tháng', 
+              amount: record.input.income_labor_contract, 
+              taxDue: 0.375, 
+              taxPaid: 0.375 
+            },
+            { 
+              name: 'HĐLĐ <3 tháng / Không có HĐLĐ', 
+              amount: record.input.income_no_contract, 
+              taxDue: 0.375, 
+              taxPaid: 0.375 
+            },
+            { 
+              name: 'HĐLĐ nước ngoài', 
+              amount: record.input.income_foreign_contract, 
+              taxDue: 0.375, 
+              taxPaid: 0.375 
+            }
+          ],
+          businessIncomes: [
+            { 
+              name: 'Phân phối hàng hóa', 
+              amount: record.input.business_income_flat.distribution, 
+              taxDue: 0.375, 
+              taxPaid: 0.375 
+            },
+            { 
+              name: 'Dịch vụ xây dựng', 
+              amount: record.input.business_income_flat.service, 
+              taxDue: 1.26, 
+              taxPaid: 1 
+            },
+            { 
+              name: 'Cho thuê tài sản', 
+              amount: record.input.business_income_flat.rent, 
+              taxDue: 1.2, 
+              taxPaid: 0.6 
+            },
+            { 
+              name: 'Đại lý xổ số, bảo hiểm, bán hàng đa cấp', 
+              amount: record.input.business_income_flat.agent, 
+              taxDue: 1.2, 
+              taxPaid: 0.6 
+            },
+            { 
+              name: 'Dịch vụ hàng hóa', 
+              amount: record.input.business_income_flat.production, 
+              taxDue: 1.2, 
+              taxPaid: 0.6 
+            },
+            { 
+              name: 'Kinh doanh khác', 
+              amount: record.input.business_income_flat.others, 
+              taxDue: 1.2, 
+              taxPaid: 0.6 
+            }
+          ],
+          otherIncomes: [
+            { 
+              name: 'Chuyển nhượng BĐS', 
+              amount: record.input.once_off_income.real_estate, 
+              taxDue: 0.3, 
+              taxPaid: 0.3 
+            },
+            { 
+              name: 'Đầu tư vốn', 
+              amount: record.input.once_off_income.investment, 
+              taxDue: 0.5, 
+              taxPaid: 0.5 
+            },
+            { 
+              name: 'Chuyển nhượng vốn', 
+              amount: record.input.once_off_income.capital_transfer, 
+              taxDue: 0.5, 
+              taxPaid: 0.5 
+            },
+            { 
+              name: 'Bản quyền, nhượng quyền thương mại', 
+              amount: record.input.once_off_income.royalty, 
+              taxDue: 0.5, 
+              taxPaid: 0.5 
+            },
+            { 
+              name: 'Trúng thưởng', 
+              amount: record.input.once_off_income.lottery, 
+              taxDue: 0.2, 
+              taxPaid: 0.2 
+            },
+            { 
+              name: 'Thừa kế, quà tặng', 
+              amount: record.input.once_off_income.inheritance, 
+              taxDue: 0.2, 
+              taxPaid: 0.2 
+            },
+          ]
+        }));
+        
+        setTaxRecords(records);
+      } else {
+        console.error('Failed to fetch tax records:', res.message);
+        // Xử lý lỗi nếu cần
+        setTaxRecords([]); // Đặt lại dữ liệu nếu không thành công
+      }
+    } catch (error) {
+      console.error('Error fetching tax records:', error);
+      // Xử lý lỗi nếu cần
+      setTaxRecords([]); // Đặt lại dữ liệu nếu có lỗi
+    }
+  };
+
+  console.log('taxRecords:', taxRecords);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
@@ -183,12 +259,12 @@ function UserStorageScreen() {
   return (
     <div className="user-storage-container">
       <div className="storage-header">
-        <h2 className="storage-title">Lưu trữ thuế</h2>
+        <h2 className="storage-title">Lưu trữ dữ liệu thuế</h2>
         <div className="year-selector">
           <label>Năm:</label>
           <select 
             value={selectedYear} 
-            onChange={(e) => setSelectedYear(e.target.value)}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
             className="year-select-input"
           >
             {availableYears.map(year => (
@@ -364,6 +440,8 @@ function UserStorageScreen() {
                     {selectedRecord.businessIncomes.map((income, index) => (
                       <tr key={`business-${index}`}>
                         <td>{income.name}</td>
+                        {console.log("income:", income)}
+                        {console.log("income.amount:", income.amount)}
                         <td>{income.amount.toLocaleString()}</td>
                         <td>{income.taxDue.toLocaleString()}</td>
                         <td>{income.taxPaid.toLocaleString()}</td>

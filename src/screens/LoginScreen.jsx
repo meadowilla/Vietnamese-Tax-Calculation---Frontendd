@@ -1,60 +1,73 @@
-import React from 'react';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import {TextField} from '@mui/material';
 import {Close, DangerousSharp, VisibilityOffOutlined, VisibilityOutlined} from '@mui/icons-material';
 import './LoginScreen.css';
 import FormSubmit from '../forms/FormSubmit';
+import { login } from '../redux/UserSlice';
 
 function LoginScreen() {
   const { handleSubmit, register, formState: { errors } } = useForm();
   const [passwordShown, setPasswordShown] = useState(false);
+  const dispatch = useDispatch();
 
-  const onSubmit = ({email, password}) => {
-    try {
-      if (!email || !password) {
-        throw new Error('Email and password are required');
-      }
-      // Validate email format
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        throw new Error('Invalid email format');
-      }
-      // Validate password length
-      if (password.length < 8 || password.length > 25) {
-        throw new Error('Password must be between 8 and 25 characters');
-      }
-      // Validate password complexity
-      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/;
-      if (!passwordPattern.test(password)) {
-        throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
-      }
-      
-      const req = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      };
-
-      fetch('http://localhost:3000/auth/login/', req)
-        .then(response => response.json())
-        .then(res => {
-          if (res.status === 200) {
-            console.log('User logged in successfully:', res);
-          } else {
-            throw new Error("Invalid email or password");
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    } catch (error) {
-      console.error('Error:', error);
+  const validateCredentials = (email, password) => {
+    if (!email || !password) {
+      throw new Error('Email and password are required');
     }
-  }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      throw new Error('Invalid email format');
+    }
+
+    if (password.length < 8 || password.length > 25) {
+      throw new Error('Password must be between 8 and 25 characters');
+    }
+
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/;
+    if (!passwordPattern.test(password)) {
+      throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+    }
+  };
+
+  const onSubmit = async ({ email, password }) => {
+    try {
+      // Validate credentials
+      validateCredentials(email, password);
+
+      // Prepare login request
+      const response = await fetch('http://localhost:3000/auth/login/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const res = await response.json();
+
+      if (res.success) {
+        console.log('User logged in successfully:', res);
+        
+        // Dispatch login action
+        dispatch(login({
+          accessToken: res.accessToken,
+          userId: res.userId,
+        }));
+
+        // Redirect
+        window.location.href = '/user/luutru';
+      } else {
+        throw new Error('Invalid email or password');
+      }
+
+    } catch (error) {
+      console.error('Login error:', error.message);
+      // Optional: Show user-friendly error toast or message here
+    }
+  };
+
   return (
     <div>
       <div className="loginScreen">
