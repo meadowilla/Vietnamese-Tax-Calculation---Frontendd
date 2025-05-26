@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './ForgotPassword.css';
 
+
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
@@ -26,6 +27,28 @@ const ForgotPassword = () => {
         setStep(2);
       }, 1500);
     }, 2000);
+
+    const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email}),
+      };
+
+    fetch('http://localhost:3000/auth/forgotPassword/', req)
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === 200) {
+          console.log('Send OTP successfully:', res);
+        } else {
+          throw new Error("Internal server error");
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      }
+    );
   };
   
 
@@ -35,6 +58,27 @@ const ForgotPassword = () => {
       alert("Mật khẩu không khớp!");
       return;
     }
+    const req = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp, newPassword, confirmPassword }),
+      };
+
+    fetch('http://localhost:3000/auth/resetPassword/', req)
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === 200) {
+          console.log('Reset password successfully:', res);
+        } else {
+          throw new Error("Internal server error");
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      }
+    );
     console.log("Resetting password for:", email, "OTP:", otp);
     alert("Đặt lại mật khẩu thành công!");
   };
