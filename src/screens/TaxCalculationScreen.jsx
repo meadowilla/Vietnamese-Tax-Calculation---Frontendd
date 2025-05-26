@@ -208,7 +208,7 @@ function TaxCalculationScreen() {
             },
             errors.goodsDistribution,
             null,
-            11
+            4
           )}
 
           {renderInput(
@@ -222,7 +222,7 @@ function TaxCalculationScreen() {
             },
             errors.serviceConstruction,
             null,
-            12
+            4
           )}
 
           {renderInput(
@@ -236,7 +236,7 @@ function TaxCalculationScreen() {
             },
             errors.propertyRental,
             null,
-            13
+            4
           )}
 
           {renderInput(
@@ -250,7 +250,7 @@ function TaxCalculationScreen() {
             },
             errors.agencyServices,
             null,
-            14
+            4
           )}
 
           {renderInput(
@@ -264,7 +264,7 @@ function TaxCalculationScreen() {
             },
             errors.productionTransport,
             null,
-            15
+            4
           )}
 
           {renderInput(
@@ -278,7 +278,7 @@ function TaxCalculationScreen() {
             },
             errors.otherBusiness,
             null,
-            16
+            4
           )}
         </div>
       ) : (
@@ -295,7 +295,7 @@ function TaxCalculationScreen() {
             },
             errors.totalRevenue,
             null,
-            17
+            4
           )}
 
           {renderInput(
@@ -309,7 +309,7 @@ function TaxCalculationScreen() {
             },
             errors.deductibleCost,
             null,
-            18
+            4
           )}
         </div>
       )}
@@ -325,27 +325,27 @@ function TaxCalculationScreen() {
     {
       label: "Thu nhập từ đầu tư vốn",
       tooltip: "Góp vốn, lợi tức, cổ tức… Thuế áp dụng là 5% trên phần thu nhập được chia. Thông thường công ty đã khấu trừ thuế trước khi tả cho nhà đầu tư.",
-      articleId: 6
+      articleId: 5
     },
     {
       label: "Thu nhập từ chuyển nhượng vốn",
       tooltip: "Thuế áp dụng là 0.1% trên giá chuyển nhượng. Thông thường đã khấu từ thuế trước khi chuyển nhượng.",
-      articleId: 7
+      articleId: 5
     },
     {
       label: "Thu nhập từ bản quyền, nhượng quyền thương mại",
       tooltip: "Thuế áp dụng là 5% trên phần giá trị chuyển nhượng vượt 10 triệu đồng/lần. Thông thường bên nhận quyền sử dụng đã khấu trừ thuế.",
-      articleId: 8
+      articleId: 5
     },
     {
       label: "Thu nhập từ trúng thưởng",
       tooltip: "Bao gồm: Xổ số, trúng thưởng game show, cá cược thể thao (hợp pháp), khuyến mại lớn... Thuế áp dụng là 10% trên phần giá trị trúng vượt 10 triệu đồng/lần. Thông thường bên tổ chức đã khấu trừ thuế.",
-      articleId: 9
+      articleId: 5
     },
     {
       label: "Thu nhập từ thừa kế, quà tặng là tài sản có đăng ký (nhà, xe, cổ phiếu...)",
       tooltip: "Thuế áp dụng là 10% trên phần giá trị thừa kế, quà tặng vượt 10 triệu đồng/lần.",
-      articleId: 10
+      articleId: 5
     },
   ];
 
@@ -389,7 +389,7 @@ function TaxCalculationScreen() {
               }
             },
           },
-          errors.year, inputRefs.year, 2
+          errors.year, inputRefs.year, 1
         )}
       </div>
 
@@ -427,7 +427,7 @@ function TaxCalculationScreen() {
               }
             }
           },
-          errors.dependents, inputRefs.dependents, 3
+          errors.dependents, inputRefs.dependents, 2
         )}
 
         <div className="form-group">
@@ -453,7 +453,7 @@ function TaxCalculationScreen() {
           {},
           errors.longTermIncome,
           inputRefs.longTermIncome,
-          14
+          3
         )}
         {renderInputWithRadio(
           "Thu nhập không có hợp đồng lao động hoặc hợp đồng dưới 3 tháng",
@@ -464,7 +464,7 @@ function TaxCalculationScreen() {
           {},
           errors.shortTermIncome,
           inputRefs.shortTermIncome,
-          15
+          3
         )}
 
         <div className="form-group">
@@ -526,7 +526,7 @@ function TaxCalculationScreen() {
             const value = e.target.value;
             setFormData(prev => ({ ...prev, submittedDate: value }));
           }
-        }, errors.submittedDate, inputRefs.submittedDate, 5)}
+        }, errors.submittedDate, inputRefs.submittedDate, 4)}
 
         {renderInputWithRadio(
           incomeSources[0].label,
