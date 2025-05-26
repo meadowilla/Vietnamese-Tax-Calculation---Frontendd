@@ -614,11 +614,11 @@ function TaxCalculationScreen() {
                     <p className="result-value">0 triệu VNĐ</p>
                   </div>
                   <div className="result-box">
-                    <p className="result-label">Số thuế phải nộp</p>
+                    <p className="result-label">Tổng thuế cần nộp</p>
                     <p className="result-value">0 triệu VNĐ</p>
                   </div>
                   <div className="result-box">
-                    <p className="result-label">Số thuế đã nộp</p>
+                    <p className="result-label">Tổng thuế đã nộp</p>
                     <p className="result-value">0 triệu VNĐ</p>
                   </div>
                 </div>
