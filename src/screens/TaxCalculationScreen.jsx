@@ -455,7 +455,8 @@ function TaxCalculationScreen() {
       setResults({
         totalIncome: result.data.total_income,
         taxOwed: result.data.summary.tax_need_to_pay,
-        taxPaid: result.data.summary.tax_paid
+        taxPaid: result.data.summary.tax_paid,
+        taxDeadline: result.data.deadline_to_pay_tax
       });
     } catch (error) {
       console.error('Lỗi khi gửi dữ liệu:', error);
@@ -738,6 +739,12 @@ function TaxCalculationScreen() {
                     <p className="result-label">Số thuế đã nộp</p>
                     <p className="result-value">{results.taxPaid.business + results.taxPaid.one_time} triệu VNĐ</p>
                   </div>
+                </div>
+                {}
+                <div className="tax-deadline-alert">
+                  <p className="alert-text">
+                    <strong>Lưu ý:</strong> Bạn cần nộp thuế trước ngày {results.taxDeadline} của năm tính thuế.
+                  </p>
                 </div>
               </div>
             </Accordion.Content>
