@@ -26,17 +26,45 @@ const ForgotPassword = () => {
         setStep(2);
       }, 1500);
     }, 2000);
+
+    const response = await fetch('http://localhost:3000/auth/forgotPassword/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+    });
+    const res = await response.json();
+
+    if (res.success) {
+      console.log('OTP sent successfully:', res);
+      setInfoMessage("Vui lòng kiểm tra email để lấy OTP");
+    } else {
+      console.error('Error sending OTP:', res.message);
+      setInfoMessage("Có lỗi xảy ra khi gửi OTP. Vui lòng thử lại.");
+    }
   };
   
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert("Mật khẩu không khớp!");
       return;
     }
-    console.log("Resetting password for:", email, "OTP:", otp);
-    alert("Đặt lại mật khẩu thành công!");
+    const response = await fetch('http://localhost:3000/auth/resetPassword/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp, newPassword, confirmNewPassword: confirmPassword }),
+    });
+    const res = await response.json();
+    if (res.success) {
+      console.log('Password reset successfully:', res);
+      alert("Mật khẩu đã được đặt lại thành công!");
+      // Có thể chuyển hướng người dùng đến trang đăng nhập
+      window.location.href = '/account/signin';
+    } else {
+      console.error('Error resetting password:', res.message);
+      alert("Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.");
+    }    
   };
 
   return (
