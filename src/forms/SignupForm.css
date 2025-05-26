@@ -121,3 +121,21 @@
         font-size: 14px;
     }
 }
+
+.signupForm__errorMsg {
+  color: #d32f2f; /* màu đỏ đậm */
+  background-color: #fdecea; /* nền đỏ nhạt */
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.signupForm__successMsg {
+  color: #388e3c; /* màu xanh lá đậm */
+  background-color: #e8f5e9; /* nền xanh lá nhạt */
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}

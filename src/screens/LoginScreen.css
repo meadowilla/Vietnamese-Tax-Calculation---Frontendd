@@ -184,3 +184,23 @@
         max-width: 90%;
     }
 }
+.loginScreen__errorMessage {
+  color: #d32f2f; /* đỏ */
+  margin: 8px 0;
+  font-weight: 600;
+  background-color: #fdecea;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.loginScreen__successMessage {
+  color: #388e3c; /* xanh lá */
+  margin: 8px 0;
+  font-weight: 600;
+  background-color: #e8f5e9;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* Bạn giữ nguyên các class khác như hiện tại */
+
