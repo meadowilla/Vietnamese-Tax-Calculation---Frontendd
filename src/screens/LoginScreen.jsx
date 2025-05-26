@@ -55,9 +55,6 @@ function LoginScreen() {
           accessToken: res.accessToken,
           userId: res.userId,
         }));
-
-        // Redirect
-        window.location.href = '/user/luutru';
       } else {
         throw new Error('Invalid email or password');
       }

@@ -7,14 +7,14 @@ function ProtectedRoute({ children }) {
     const user = useSelector(selectUser);
     const isAuthLoading = useSelector(selectIsAuthLoading);
 
-    // nếu đang tải thông tin người dùng
-    if (isAuthLoading) {
-        return <Spinner />;
-    }
-
     // user chưa đăng nhập 
     if (!user) {
         return <Navigate to ="/account/signin" replace />;
+    }
+    
+    // nếu đang tải thông tin người dùng
+    if (isAuthLoading) {
+        return <Spinner />;
     }
 
     return children;
