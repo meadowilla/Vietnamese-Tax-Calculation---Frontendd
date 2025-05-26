@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './ForgotPassword.css';
 
-
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
@@ -28,59 +27,44 @@ const ForgotPassword = () => {
       }, 1500);
     }, 2000);
 
-    const req = {
+    const response = await fetch('http://localhost:3000/auth/forgotPassword/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email}),
-      };
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+    });
+    const res = await response.json();
 
-    fetch('http://localhost:3000/auth/forgotPassword/', req)
-      .then(response => response.json())
-      .then(res => {
-        if (res.status === 200) {
-          console.log('Send OTP successfully:', res);
-        } else {
-          throw new Error("Internal server error");
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      }
-    );
+    if (res.success) {
+      console.log('OTP sent successfully:', res);
+      setInfoMessage("Vui lòng kiểm tra email để lấy OTP");
+    } else {
+      console.error('Error sending OTP:', res.message);
+      setInfoMessage("Có lỗi xảy ra khi gửi OTP. Vui lòng thử lại.");
+    }
   };
   
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert("Mật khẩu không khớp!");
       return;
     }
-    const req = {
+    const response = await fetch('http://localhost:3000/auth/resetPassword/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, otp, newPassword, confirmPassword }),
-      };
-
-    fetch('http://localhost:3000/auth/resetPassword/', req)
-      .then(response => response.json())
-      .then(res => {
-        if (res.status === 200) {
-          console.log('Reset password successfully:', res);
-        } else {
-          throw new Error("Internal server error");
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      }
-    );
-    console.log("Resetting password for:", email, "OTP:", otp);
-    alert("Đặt lại mật khẩu thành công!");
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp, newPassword, confirmNewPassword: confirmPassword }),
+    });
+    const res = await response.json();
+    if (res.success) {
+      console.log('Password reset successfully:', res);
+      alert("Mật khẩu đã được đặt lại thành công!");
+      // Có thể chuyển hướng người dùng đến trang đăng nhập
+      window.location.href = '/account/signin';
+    } else {
+      console.error('Error resetting password:', res.message);
+      alert("Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại.");
+    }    
   };
 
   return (
