@@ -372,7 +372,7 @@ function TaxCalculationScreen() {
   const handleTaxCalculation = async () => {
     const payload = {
       // uid
-      uid: user?.userId,
+      uid: user ? user.uid : '',
     
       // Thuế thu nhập
       month: parseInt(inputRefs.month.current?.value || '1', 10),
@@ -427,10 +427,10 @@ function TaxCalculationScreen() {
     };
     console.log("payload:", payload);
 
-    const uri = user ? 'http://127.0.0.1:3000/tax/calculate-tax-auth' : 'http://http://127.0.0.1:3000/tax/calculate-tax';
+    const uri = user ? 'http://127.0.0.1:3000/tax/calculate-tax-auth' : 'http://127.0.0.1:3000/tax/calculate-tax';
     console.log("uri:", uri);
     
-    const headers = user.accessToken 
+    const headers = user 
     ? {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${user.accessToken}`
